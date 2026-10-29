@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">DalalSetu</string>
+    <string name="title_activity_main">DalalSetu</string>
+    <string name="package_name">in.dalalsetu.agent</string>
+    <string name="custom_url_scheme">in.dalalsetu.agent</string>
+</resources>

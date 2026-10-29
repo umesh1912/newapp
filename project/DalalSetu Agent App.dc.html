@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Gujarati:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0;background:rgb(245,245,245)}*{box-sizing:border-box}a{color:rgb(121,0,9)}a:hover{color:rgb(104,0,8)}button,input,textarea{font-family:inherit}input::placeholder,textarea::placeholder{color:rgb(150,150,150)}</style>
+<script src="dalal-data.js"></script>
+<script type="module" src="ds-icon.js"></script>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-wrap:wrap;gap:40px;justify-content:center;align-items:flex-start;padding:32px 24px;font-family:Inter,'Noto Sans Gujarati',sans-serif;color:rgb(61,61,61)">
+<sc-if value="{{ showPanel }}" hint-placeholder-val="{{ true }}">
+<aside style="width:260px;display:flex;flex-direction:column;gap:20px;padding-top:8px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="font-size:24px;font-weight:700;color:rgb(121,0,9)">DalalSetu</div>
+<div style="font-size:13px;color:rgb(102,102,102);line-height:1.5">Agent app prototype · Surat. Tap through the phone, or jump to any screen. Language switch is in the app's top bar.</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:2px">
+<div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:rgb(102,102,102);padding:0 10px 6px">Screens</div>
+<sc-for list="{{ jumps }}" as="j" hint-placeholder-count="16">
+<button onClick="{{ j.go }}" style="text-align:left;border:none;background:{{ j.bg }};color:{{ j.fg }};font-size:13px;font-weight:500;padding:7px 10px;border-radius:4px;cursor:pointer;display:flex;gap:10px;align-items:center" style-hover="background:rgb(252,236,238)"><span style="font-family:Menlo,monospace;font-size:11px;color:rgb(102,102,102);width:18px">{{ j.n }}</span>{{ j.label }}</button>
+</sc-for>
+</div>
+<a href="DalalSetu Admin.dc.html" style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">Open Admin console<ds-icon name="ArrowRight" size="16"></ds-icon></a>
+</aside>
+</sc-if>
+<div style="width:390px;height:844px;border-radius:52px;background:rgb(30,30,30);padding:10px;box-shadow:0 4px 16px rgba(0,0,0,.12),0 14px 16px rgba(0,0,0,.24);flex:none">
+<div style="width:100%;height:100%;border-radius:42px;overflow:hidden;background:#fff;display:flex;flex-direction:column;position:relative">
+<div style="height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:4px 30px 0;font-size:14px;font-weight:600;background:#fff"><span>9:41</span><span style="display:flex;gap:6px;align-items:center;font-size:12px">5G<span style="width:24px;height:12px;border:1.5px solid rgb(61,61,61);border-radius:3px;padding:1px;display:flex"><span style="width:70%;background:rgb(61,61,61);border-radius:1px"></span></span></span></div>
+<sc-if value="{{ showHeader }}" hint-placeholder-val="{{ false }}">
+<div style="height:56px;flex:none;display:flex;align-items:center;gap:6px;padding:0 10px 0 6px;border-bottom:1px solid rgba(0,0,0,.08);background:#fff">
+<sc-if value="{{ isSub }}"><button onClick="{{ back }}" aria-label="Back" style="width:44px;height:44px;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgb(61,61,61);border-radius:4px" style-hover="background:rgb(245,245,245)"><ds-icon name="ArrowLeft" size="20"></ds-icon></button></sc-if>
+<div style="flex:1;min-width:0;padding-left:{{ hdrPad }};font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:rgb(61,61,61)">{{ hdrTitle }}</div>
+<div style="display:flex;border:1px solid rgba(0,0,0,.16);border-radius:999px;padding:2px;gap:2px">
+<button onClick="{{ setGu }}" style="border:none;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer;background:{{ guBg }};color:{{ guFg }}">ગુ</button>
+<button onClick="{{ setEn }}" style="border:none;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer;background:{{ enBg }};color:{{ enFg }}">EN</button>
+</div>
+<sc-if value="{{ showBell }}"><button onClick="{{ openNotifs }}" aria-label="Notifications" style="width:44px;height:44px;border:none;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgb(61,61,61);border-radius:4px;position:relative" style-hover="background:rgb(245,245,245)"><ds-icon name="Notification" size="20"></ds-icon><span style="position:absolute;top:8px;right:8px;min-width:16px;height:16px;border-radius:999px;background:rgb(121,0,9);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px">2</span></button></sc-if>
+</div>
+</sc-if>
+<div ref="{{ scrollRef }}" style="flex:1;overflow-y:auto;scrollbar-width:none;background:rgb(250,250,250);position:relative">
+<sc-if value="{{ is.lang }}" hint-placeholder-val="{{ true }}">
+<div style="min-height:100%;display:flex;flex-direction:column;padding:40px 24px 28px;background:#fff;gap:32px">
+<div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
+<div style="width:56px;height:56px;border-radius:6px;background:rgb(121,0,9);color:#fff;display:flex;align-items:center;justify-content:center"><ds-icon name="BuildingsSolid" size="28"></ds-icon></div>
+<div style="font-size:28px;font-weight:700;color:rgb(121,0,9);line-height:1.25">{{ t.app }}</div>
+<div style="font-size:15px;line-height:1.55;color:rgb(102,102,102);text-wrap:pretty">{{ t.tagline }}</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="font-size:17px;font-weight:700">{{ t.chooseLang }}</div>
+<sc-for list="{{ langOpts }}" as="o" hint-placeholder-count="2">
+<button onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:6px;border:1px solid {{ o.bd }};background:{{ o.bg }};cursor:pointer;text-align:left">
+<div style="width:44px;height:44px;border-radius:4px;background:#fff;border:1px solid rgba(0,0,0,.08);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:rgb(121,0,9)">{{ o.glyph }}</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;font-weight:600;color:rgb(61,61,61)">{{ o.name }}</span><span style="font-size:13px;color:rgb(102,102,102)">{{ o.sub }}</span></div>
+<span style="width:20px;height:20px;border-radius:50%;border:{{ o.radio }};background:#fff;flex:none"></span>
+</button>
+</sc-for>
+<div style="font-size:13px;color:rgb(102,102,102)">{{ t.langSub }}</div>
+</div>
+<button onClick="{{ goPhone }}" style="margin-top:auto;height:48px;width:100%;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:rgb(104,0,8)">{{ t.continue }}</button>
+</div>
+</sc-if>
+<sc-if value="{{ is.phone }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100%;padding:24px;display:flex;flex-direction:column;gap:20px;background:#fff">
+<div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:24px;font-weight:700;line-height:1.3">{{ t.enterMobile }}</div><div style="font-size:15px;color:rgb(102,102,102);line-height:1.5">{{ t.mobileSub }}</div></div>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:600">{{ t.mobileLabel }}</span>
+<div style="display:flex;gap:8px"><div style="height:48px;padding:0 12px;display:flex;align-items:center;border:1px solid rgba(0,0,0,.16);border-radius:4px;background:rgb(245,245,245);font-size:16px">+91</div><input type="tel" inputmode="numeric" value="{{ phone }}" onChange="{{ onPhone }}" placeholder="98250 41042" style="flex:1;min-width:0;height:48px;border:1px solid rgba(0,0,0,.16);border-radius:4px;padding:0 12px;font-size:16px;letter-spacing:.04em;color:rgb(61,61,61);outline:none" style-focus="border-color:rgb(121,0,9);box-shadow:0 0 0 4px rgba(121,0,9,.25)"></div>
+</label>
+<sc-if value="{{ hasErr }}"><div style="font-size:13px;color:rgb(202,20,0);display:flex;gap:6px;align-items:center"><ds-icon name="WarningCircle" size="14"></ds-icon>{{ err }}</div></sc-if>
+<button onClick="{{ sendOtp }}" style="height:48px;width:100%;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:rgb(104,0,8)">{{ t.sendOtp }}</button>
+<div style="font-size:12px;color:rgb(102,102,102);line-height:1.5">{{ t.terms }}</div>
+</div>
+</sc-if>
+<sc-if value="{{ is.otp }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100%;padding:24px;display:flex;flex-direction:column;gap:20px;background:#fff">
+<div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:24px;font-weight:700;line-height:1.3">{{ t.enterOtp }}</div><div style="font-size:15px;color:rgb(102,102,102);line-height:1.5">{{ t.otpSentTo }}{{ phoneFmt }}</div></div>
+<label style="position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:8px;cursor:text">
+<sc-for list="{{ otpBoxes }}" as="b" hint-placeholder-count="6"><div style="height:52px;border:1px solid {{ b.bd }};border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;background:#fff">{{ b.d }}</div></sc-for>
+<input inputmode="numeric" autocomplete="one-time-code" value="{{ otp }}" onChange="{{ onOtp }}" aria-label="OTP" style="position:absolute;inset:0;opacity:0;width:100%;height:100%;border:none">
+</label>
+<div style="display:flex;justify-content:space-between;font-size:13px;color:rgb(102,102,102)"><span>{{ t.resend }}</span><span>{{ t.otpHint }}</span></div>
+<sc-if value="{{ hasErr }}"><div style="font-size:13px;color:rgb(202,20,0);display:flex;gap:6px;align-items:center"><ds-icon name="WarningCircle" size="14"></ds-icon>{{ err }}</div></sc-if>
+<button onClick="{{ verifyOtp }}" style="height:48px;width:100%;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:rgb(104,0,8)">{{ t.verify }}</button>
+</div>
+</sc-if>
+<sc-if value="{{ is.home }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px;display:flex;flex-direction:column;gap:22px">
+<div style="display:flex;align-items:center;gap:12px">
+<div style="width:48px;height:48px;border-radius:50%;background:rgb(252,236,238);color:rgb(121,0,9);font-weight:700;display:flex;align-items:center;justify-content:center;flex:none">RP</div>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0"><div style="font-size:19px;font-weight:700">{{ t.greet }}</div><div style="display:flex;gap:6px;align-items:center;font-size:12px;color:rgb(36,120,0);font-weight:600"><ds-icon name="SecurityCheckSolid" size="14"></ds-icon>{{ t.verifiedAgent }}<span style="color:rgb(102,102,102);font-family:Menlo,monospace;font-weight:400">DS-AG-1042</span></div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<sc-for list="{{ stats }}" as="s" hint-placeholder-count="4"><button onClick="{{ s.go }}" style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;box-shadow:0 2px 3px rgba(0,0,0,.04);padding:12px 14px;text-align:left;display:flex;flex-direction:column;gap:4px;cursor:pointer" style-hover="border-color:rgba(0,0,0,.16)"><span style="font-size:12px;color:rgb(102,102,102)">{{ s.label }}</span><span style="font-size:24px;font-weight:300;font-family:Roboto,Inter,sans-serif;color:{{ s.color }}">{{ s.value }}</span><span style="font-size:11px;color:rgb(102,102,102)">{{ s.cap }}</span></button></sc-for>
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+<sc-for list="{{ qa }}" as="a" hint-placeholder-count="4"><button onClick="{{ a.go }}" style="border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;padding:4px 0"><span style="width:52px;height:52px;border-radius:6px;background:#fff;border:1px solid rgba(0,0,0,.08);color:rgb(121,0,9);display:flex;align-items:center;justify-content:center"><ds-icon name="{{ a.icon }}" size="22"></ds-icon></span><span style="font-size:12px;font-weight:500;color:rgb(61,61,61);text-align:center;line-height:1.3">{{ a.label }}</span></button></sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font-size:15px;font-weight:700">{{ t.attention }}</div>
+<sc-for list="{{ alerts }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.go }}" style="display:flex;gap:12px;align-items:center;padding:12px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;cursor:pointer;text-align:left" style-hover="border-color:rgba(0,0,0,.16)"><span style="width:40px;height:40px;border-radius:4px;background:{{ a.tBg }};color:{{ a.tFg }};display:flex;align-items:center;justify-content:center;flex:none"><ds-icon name="{{ a.icon }}" size="18"></ds-icon></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:600;color:rgb(61,61,61)">{{ a.title }}</span><span style="font-size:12px;color:rgb(102,102,102);line-height:1.4">{{ a.desc }}</span></span><ds-icon name="ArrowChevronRight" size="16" style="color:rgb(150,150,150)"></ds-icon></button></sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font-size:15px;font-weight:700">{{ t.recent }}</div>
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;display:flex;flex-direction:column">
+<sc-for list="{{ recent }}" as="r" hint-placeholder-count="3"><div style="display:flex;gap:12px;padding:12px 14px;border-bottom:1px solid rgba(0,0,0,.06);font-size:13px;line-height:1.45"><span style="width:62px;flex:none;color:rgb(102,102,102);font-size:12px">{{ r.time }}</span><span>{{ r.text }}</span></div></sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ is.feed }}" hint-placeholder-val="{{ false }}">
+<div style="padding:12px 16px 20px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;background:rgb(240,240,240);border-radius:6px;padding:3px;gap:3px">
+<sc-for list="{{ feedTabs }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="flex:1;height:36px;border:none;border-radius:4px;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.sh }};font-size:13px;font-weight:600;cursor:pointer">{{ o.label }}</button></sc-for>
+</div>
+<label style="display:flex;align-items:center;gap:8px;height:44px;padding:0 12px;background:#fff;border:1px solid rgba(0,0,0,.16);border-radius:4px;color:rgb(102,102,102)"><ds-icon name="Zoom" size="16"></ds-icon><input value="{{ q }}" onChange="{{ onQ }}" placeholder="{{ t.searchPh }}" style="flex:1;min-width:0;border:none;outline:none;font-size:15px;color:rgb(61,61,61);background:transparent"></label>
+<div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px 2px">
+<sc-for list="{{ filters }}" as="o" hint-placeholder-count="6"><button onClick="{{ o.pick }}" style="min-height:34px;padding:6px 14px;border-radius:999px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:{{ o.w }};cursor:pointer;white-space:nowrap;flex:none">{{ o.label }}</button></sc-for>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;color:rgb(102,102,102)">{{ feedCount }} · {{ t.city }}</span><button onClick="{{ newListing }}" style="border:none;background:none;color:rgb(121,0,9);font-size:13px;font-weight:600;cursor:pointer;display:flex;gap:4px;align-items:center;padding:6px 0"><ds-icon name="Plus" size="14"></ds-icon>{{ t.newListing }}</button></div>
+<sc-if value="{{ feedEmpty }}"><div style="padding:32px 16px;text-align:center;font-size:14px;color:rgb(102,102,102)">{{ t.noResults }}</div></sc-if>
+<sc-for list="{{ feed }}" as="l" hint-placeholder-count="3">
+<button onClick="{{ l.open }}" style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;box-shadow:0 2px 3px rgba(0,0,0,.04);padding:0;overflow:hidden;text-align:left;cursor:pointer;display:flex;flex-direction:column;color:rgb(61,61,61)" style-hover="border-color:rgba(0,0,0,.16)">
+<div style="height:132px;width:100%;background:rgb(240,240,240);position:relative;display:flex;align-items:center;justify-content:center;color:rgb(160,160,160)"><ds-icon name="Images" size="28"></ds-icon>
+<span style="position:absolute;top:10px;left:10px;font-size:11px;font-weight:600;background:#fff;color:rgb(61,61,61);padding:3px 8px;border-radius:999px">{{ l.txLabel }}</span>
+<sc-if value="{{ l.dup }}"><span style="position:absolute;top:10px;right:10px;font-size:11px;font-weight:600;background:rgb(252,231,229);color:rgb(176,18,0);padding:3px 8px;border-radius:999px;display:flex;gap:4px;align-items:center"><ds-icon name="WarningTriangle" size="12"></ds-icon>{{ t.possibleDup }}</span></sc-if>
+<span style="position:absolute;bottom:8px;left:10px;font-size:10px;font-weight:600;color:rgb(102,102,102);background:rgba(255,255,255,.85);padding:2px 6px;border-radius:2px;font-family:Menlo,monospace">DS-SUR-{{ l.id }}</span>
+<span style="position:absolute;bottom:8px;right:10px;font-size:11px;color:rgb(102,102,102)">{{ l.photos }} {{ t.photos }}</span>
+</div>
+<div style="padding:12px 14px;display:flex;flex-direction:column;gap:5px;width:100%">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-size:18px;font-weight:700">{{ l.price }}</span><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:{{ l.tBg }};color:{{ l.tFg }};white-space:nowrap">{{ l.stLabel }}</span></div>
+<div style="font-size:15px;font-weight:600">{{ l.title }}</div>
+<div style="font-size:13px;color:rgb(102,102,102);display:flex;gap:4px;align-items:center"><ds-icon name="MarkerPin" size="14"></ds-icon>{{ l.loc }} · {{ l.size }}</div>
+<div style="display:flex;align-items:center;gap:8px;border-top:1px solid rgba(0,0,0,.06);margin-top:6px;padding-top:10px">
+<span style="width:24px;height:24px;border-radius:50%;background:rgb(252,236,238);color:rgb(121,0,9);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none">{{ l.agentInit }}</span>
+<span style="font-size:12px;font-weight:600">{{ l.agentName }}</span>
+<sc-if value="{{ l.verified }}"><ds-icon name="SecurityCheckSolid" size="13" style="color:rgb(36,120,0)"></ds-icon></sc-if>
+<sc-if value="{{ l.unverified }}"><span style="font-size:11px;color:rgb(176,18,0);font-weight:600">{{ t.unverified }}</span></sc-if>
+<span style="margin-left:auto;font-size:11px;color:rgb(102,102,102)">{{ l.upd }}</span>
+</div>
+</div>
+</button>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ is.detail }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;min-height:100%">
+<div style="height:210px;background:rgb(235,235,235);position:relative;display:flex;align-items:center;justify-content:center;color:rgb(160,160,160);flex:none"><ds-icon name="Images" size="36"></ds-icon>
+<span style="position:absolute;left:12px;bottom:10px;font-size:11px;font-weight:600;color:rgb(61,61,61);background:rgba(255,255,255,.9);padding:3px 8px;border-radius:2px">DS-SUR-{{ L.id }} · {{ L.agentName }}</span>
+<span style="position:absolute;right:12px;bottom:10px;font-size:11px;font-weight:600;color:#fff;background:rgba(0,0,0,.55);padding:3px 8px;border-radius:999px">1 / {{ L.photos }}</span>
+</div>
+<div style="padding:16px;display:flex;flex-direction:column;gap:14px;flex:1">
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-size:24px;font-weight:700">{{ L.price }}</span><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:{{ L.tBg }};color:{{ L.tFg }}">{{ L.stLabel }}</span></div>
+<div style="font-size:17px;font-weight:600">{{ L.title }} · {{ L.txLabel }}</div>
+<div style="font-size:13px;color:rgb(102,102,102);display:flex;gap:4px;align-items:center"><ds-icon name="MarkerPin" size="14"></ds-icon>{{ L.loc }}, {{ t.city }} · {{ L.size }}</div>
+<div style="font-size:13px;color:rgb(102,102,102)">{{ L.extra }}</div>
+</div>
+<sc-if value="{{ isDupe }}">
+<div style="background:rgb(252,231,229);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;color:rgb(120,14,0)">
+<div style="display:flex;gap:8px;align-items:center;font-size:14px;font-weight:700"><ds-icon name="WarningTriangle" size="16"></ds-icon>{{ t.dupWarnTitle }}</div>
+<div style="font-size:13px;line-height:1.5">{{ t.dupWarn }}</div>
+<button onClick="{{ seeOriginal }}" style="align-self:flex-start;height:36px;padding:0 14px;border:1px solid rgb(176,18,0);border-radius:4px;background:#fff;color:rgb(176,18,0);font-size:13px;font-weight:600;cursor:pointer">{{ t.seeOriginal }}</button>
+</div>
+</sc-if>
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;font-weight:600;color:rgb(102,102,102);text-transform:uppercase;letter-spacing:.05em">{{ t.listedBy }}</span><sc-if value="{{ L.verified }}"><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:rgb(252,236,238);color:rgb(121,0,9)">{{ t.originalListing }}</span></sc-if></div>
+<div style="display:flex;gap:12px;align-items:center">
+<span style="width:44px;height:44px;border-radius:50%;background:rgb(252,236,238);color:rgb(121,0,9);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none">{{ L.agentInit }}</span>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+<div style="display:flex;gap:6px;align-items:center;font-size:15px;font-weight:700">{{ L.agentName }}<sc-if value="{{ L.verified }}"><ds-icon name="SecurityCheckSolid" size="14" style="color:rgb(36,120,0)"></ds-icon></sc-if></div>
+<div style="font-size:12px;color:rgb(102,102,102)">{{ L.agency }} · <span style="font-family:Menlo,monospace">{{ L.agentId }}</span></div>
+</div>
+<div style="text-align:right;display:flex;flex-direction:column;gap:1px"><span style="font-size:17px;font-weight:600">{{ L.agentDeals }}</span><span style="font-size:11px;color:rgb(102,102,102)">{{ t.tr1 }}</span></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;border-top:1px solid rgba(0,0,0,.06);padding-top:10px">
+<div style="display:flex;flex-direction:column;gap:2px"><span style="color:rgb(102,102,102)">{{ t.listingId }}</span><span style="font-family:Menlo,monospace;font-weight:600">DS-SUR-{{ L.id }}</span></div>
+<div style="display:flex;flex-direction:column;gap:2px"><span style="color:rgb(102,102,102)">{{ t.listedOn }}</span><span style="font-weight:600">{{ L.listed }}</span></div>
+</div>
+</div>
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;gap:8px;align-items:center;font-size:14px;font-weight:700"><ds-icon name="Percent" size="16" style="color:rgb(121,0,9)"></ds-icon>{{ t.collab }}</div>
+<div style="font-size:15px;font-weight:600">{{ L.comm }}</div>
+<div style="font-size:12px;color:rgb(102,102,102);line-height:1.5">{{ t.collabSub }}</div>
+</div>
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;display:flex;flex-direction:column">
+<div style="padding:14px 14px 10px;display:flex;flex-direction:column;gap:4px"><div style="display:flex;gap:8px;align-items:center;font-size:14px;font-weight:700"><ds-icon name="Lock" size="16" style="color:rgb(121,0,9)"></ds-icon>{{ t.protected }}</div><div style="font-size:12px;color:rgb(102,102,102)">{{ t.protectedSub }}</div></div>
+<div style="display:flex;justify-content:space-between;gap:12px;padding:10px 14px;border-top:1px solid rgba(0,0,0,.06);font-size:13px"><span style="color:rgb(102,102,102)">{{ t.ownerContact }}</span><span style="font-weight:600;letter-spacing:.04em">+91 98••• •••21</span></div>
+<div style="display:flex;justify-content:space-between;gap:12px;padding:10px 14px;border-top:1px solid rgba(0,0,0,.06);font-size:13px"><span style="color:rgb(102,102,102)">{{ t.exactAddr }}</span><span style="font-weight:600">{{ t.addrHidden }}</span></div>
+<div style="display:flex;justify-content:space-between;gap:12px;padding:10px 14px;border-top:1px solid rgba(0,0,0,.06);font-size:13px"><span style="color:rgb(102,102,102)">{{ t.ownerAuth }}</span><span style="font-weight:600;display:flex;gap:4px;align-items:center;color:{{ authColor }}"><ds-icon name="{{ authIcon }}" size="14"></ds-icon>{{ authLabel }}</span></div>
+<sc-if value="{{ canRequest }}"><div style="padding:10px 14px 14px"><button onClick="{{ requestAccess }}" style="height:44px;width:100%;border:1px solid rgb(121,0,9);border-radius:4px;background:#fff;color:rgb(121,0,9);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" style-hover="background:rgb(252,236,238)"><ds-icon name="Unlock" size="16"></ds-icon>{{ t.requestAccess }}</button></div></sc-if>
+<sc-if value="{{ asked }}"><div style="margin:4px 14px 14px;padding:10px 12px;border-radius:4px;background:rgb(255,243,205);color:rgb(122,87,0);font-size:13px;font-weight:600;display:flex;gap:6px;align-items:center"><ds-icon name="Clock" size="14"></ds-icon>{{ t.requested }}</div></sc-if>
+<sc-if value="{{ mineReq }}"><div style="margin:4px 14px 14px;padding:10px 12px;border-radius:4px;background:rgb(252,236,238);color:rgb(121,0,9);font-size:13px;font-weight:600;display:flex;justify-content:space-between;align-items:center"><span>{{ t.accessReqs }}</span><span style="text-decoration:underline">{{ t.review }}</span></div></sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<div style="font-size:14px;font-weight:700">{{ t.history }}</div>
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:4px 14px">
+<sc-for list="{{ hist }}" as="h" hint-placeholder-count="4"><div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.06);align-items:flex-start"><span style="width:28px;height:28px;border-radius:50%;background:rgb(245,245,245);color:rgb(102,102,102);display:flex;align-items:center;justify-content:center;flex:none"><ds-icon name="{{ h.icon }}" size="14"></ds-icon></span><div style="display:flex;flex-direction:column;gap:2px;font-size:13px"><span style="font-weight:500;line-height:1.4">{{ h.text }}</span><span style="font-size:11px;color:rgb(102,102,102)">{{ h.time }}</span></div></div></sc-for>
+</div>
+</div>
+</div>
+<div style="position:sticky;bottom:0;background:#fff;border-top:1px solid rgba(0,0,0,.08);padding:10px 16px;display:flex;gap:8px">
+<button onClick="{{ openShare }}" style="height:48px;flex:1;border:1px solid rgba(0,0,0,.16);border-radius:4px;background:#fff;color:rgb(61,61,61);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" style-hover="background:rgb(245,245,245)"><ds-icon name="Whatsapp" size="18"></ds-icon>{{ t.share }}</button>
+<button onClick="{{ recordVisitHere }}" style="height:48px;flex:1.3;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" style-hover="background:rgb(104,0,8)"><ds-icon name="MarkerPin" size="16"></ds-icon>{{ t.recordVisit }}</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ is.create }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;min-height:100%;background:#fff">
+<div style="padding:14px 16px 0;display:flex;flex-direction:column;gap:8px">
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><sc-for list="{{ stepBars }}" as="b" hint-placeholder-count="3"><span style="height:4px;border-radius:2px;background:{{ b.bg }}"></span></sc-for></div>
+<div style="font-size:12px;font-weight:600;color:rgb(102,102,102)">{{ stepLabel }}</div>
+</div>
+<div style="padding:16px;display:flex;flex-direction:column;gap:18px;flex:1">
+<sc-if value="{{ step1 }}">
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ t.propType }}</span><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><sc-for list="{{ cKind }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.pick }}" style="height:44px;border-radius:4px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:{{ o.w }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ t.txType }}</span><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><sc-for list="{{ cTx }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.pick }}" style="height:44px;border-radius:4px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:{{ o.w }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<sc-if value="{{ isRes }}"><div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ t.config }}</span><div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ cBhk }}" as="o" hint-placeholder-count="5"><button onClick="{{ o.pick }}" style="min-height:36px;padding:6px 12px;border-radius:999px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:{{ o.w }};cursor:pointer">{{ o.label }}</button></sc-for></div></div></sc-if>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ t.locality }}</span><div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ cLocs }}" as="o" hint-placeholder-count="12"><button onClick="{{ o.pick }}" style="min-height:36px;padding:6px 12px;border-radius:999px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:{{ o.w }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<div style="display:grid;grid-template-columns:1.3fr 1fr;gap:10px">
+<label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:13px;font-weight:600">{{ t.price }}</span><input inputmode="numeric" value="{{ fPrice }}" onChange="{{ onPrice }}" placeholder="11500000" style="width:100%;height:48px;border:1px solid rgba(0,0,0,.16);border-radius:4px;padding:0 12px;font-size:16px;color:rgb(61,61,61);outline:none" style-focus="border-color:rgb(121,0,9);box-shadow:0 0 0 4px rgba(121,0,9,.25)"><span style="font-size:12px;color:rgb(102,102,102);min-height:16px">{{ pricePreview }}</span></label>
+<label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:13px;font-weight:600">{{ t.size }}</span><input inputmode="numeric" value="{{ fSize }}" onChange="{{ onSize }}" placeholder="1850" style="width:100%;height:48px;border:1px solid rgba(0,0,0,.16);border-radius:4px;padding:0 12px;font-size:16px;color:rgb(61,61,61);outline:none" style-focus="border-color:rgb(121,0,9);box-shadow:0 0 0 4px rgba(121,0,9,.25)"></label>
+</div>
+</sc-if>
+<sc-if value="{{ step2 }}">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:13px;font-weight:600">{{ t.photos }}</span>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+<sc-for list="{{ photoTiles }}" as="p" hint-placeholder-count="2"><div style="aspect-ratio:1;border-radius:4px;background:rgb(235,235,235);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:rgb(150,150,150);position:relative"><ds-icon name="Image" size="22"></ds-icon><span style="position:absolute;bottom:4px;left:4px;right:4px;font-size:8px;font-family:Menlo,monospace;color:rgb(102,102,102);text-align:center">{{ p.n }}</span></div></sc-for>
+<sc-if value="{{ canAddPhoto }}"><button onClick="{{ addPhoto }}" style="aspect-ratio:1;border-radius:4px;border:1px dashed rgba(0,0,0,.24);background:rgb(250,250,250);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:rgb(121,0,9);cursor:pointer;font-size:12px;font-weight:600"><ds-icon name="PhotoCamera" size="22"></ds-icon>{{ t.addPhoto }}</button></sc-if>
+</div>
+<span style="font-size:12px;color:rgb(102,102,102);display:flex;gap:6px;align-items:center"><ds-icon name="SecurityCheckOutline" size="14"></ds-icon>{{ t.photoNote }}</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ t.amenities }}</span><div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ cAmen }}" as="o" hint-placeholder-count="6"><button onClick="{{ o.pick }}" style="min-height:36px;padding:6px 12px;border-radius:999px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:{{ o.w }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:600">{{ t.desc }}</span><textarea value="{{ fDesc }}" onChange="{{ onDesc }}" placeholder="{{ t.descPh }}" rows="4" style="width:100%;border:1px solid rgba(0,0,0,.16);border-radius:4px;padding:10px 12px;font-size:15px;line-height:1.5;color:rgb(61,61,61);outline:none;resize:vertical" style-focus="border-color:rgb(121,0,9);box-shadow:0 0 0 4px rgba(121,0,9,.25)"></textarea></label>
+</sc-if>
+<sc-if value="{{ step3 }}">
+<button onClick="{{ toggleCollab }}" style="display:flex;align-items:center;gap:12px;padding:14px;border:1px solid rgba(0,0,0,.12);border-radius:6px;background:#fff;cursor:pointer;text-align:left;color:rgb(61,61,61)"><span style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-size:14px;font-weight:600">{{ t.openCollab }}</span><span style="font-size:12px;color:rgb(102,102,102);line-height:1.4">{{ t.openCollabSub }}</span></span><span style="width:40px;height:22px;border-radius:999px;background:{{ collabSw.bg }};display:flex;justify-content:{{ collabSw.just }};padding:2px;flex:none"><span style="width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)"></span></span></button>
+<sc-if value="{{ showCollab }}">
+<div style="display:grid;grid-template-columns:1fr 1.6fr;gap:10px">
+<label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:13px;font-weight:600">{{ t.commission }}</span><input inputmode="decimal" value="{{ fComm }}" onChange="{{ onComm }}" style="width:100%;height:44px;border:1px solid rgba(0,0,0,.16);border-radius:4px;padding:0 12px;font-size:16px;color:rgb(61,61,61);outline:none" style-focus="border-color:rgb(121,0,9);box-shadow:0 0 0 4px rgba(121,0,9,.25)"></label>
+<div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:13px;font-weight:600">{{ t.split }}</span><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><sc-for list="{{ cSplit }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.pick }}" style="height:44px;border-radius:4px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:12px;font-weight:{{ o.w }};cursor:pointer;padding:0">{{ o.label }}</button></sc-for></div></div>
+</div>
+</sc-if>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ t.whoPhone }}</span><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><sc-for list="{{ cPhone }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="height:44px;border-radius:4px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:{{ o.w }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ t.whoAddr }}</span><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><sc-for list="{{ cAddr }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="height:44px;border-radius:4px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:{{ o.w }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<button onClick="{{ toggleAuth }}" style="display:flex;gap:12px;align-items:flex-start;border:none;background:none;padding:4px 0;cursor:pointer;text-align:left;color:rgb(61,61,61)"><span style="width:22px;height:22px;border-radius:4px;border:2px solid {{ authBox.bd }};background:{{ authBox.bg }};color:#fff;display:flex;align-items:center;justify-content:center;flex:none"><ds-icon name="{{ authBox.icon }}" size="14"></ds-icon></span><span style="font-size:14px;font-weight:500;line-height:1.45">{{ t.authCheck }}</span></button>
+<button onClick="{{ addMandate }}" style="height:44px;border:1px dashed rgba(0,0,0,.24);border-radius:4px;background:rgb(250,250,250);color:rgb(61,61,61);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><ds-icon name="{{ mandateIcon }}" size="16"></ds-icon>{{ mandateLabel }}</button>
+<div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.5;background:rgb(233,245,227);color:rgb(36,120,0);padding:10px 12px;border-radius:4px"><ds-icon name="CheckCircle" size="14"></ds-icon><span>{{ t.dupCheck }}</span></div>
+</sc-if>
+<sc-if value="{{ hasErr }}"><div style="font-size:13px;color:rgb(202,20,0);display:flex;gap:6px;align-items:center"><ds-icon name="WarningCircle" size="14"></ds-icon>{{ err }}</div></sc-if>
+</div>
+<div style="position:sticky;bottom:0;background:#fff;border-top:1px solid rgba(0,0,0,.08);padding:10px 16px;display:flex;gap:8px">
+<sc-if value="{{ notStep1 }}"><button onClick="{{ prevStep }}" style="height:48px;padding:0 18px;border:1px solid rgba(0,0,0,.16);border-radius:4px;background:#fff;color:rgb(61,61,61);font-size:14px;font-weight:600;cursor:pointer" style-hover="background:rgb(245,245,245)">{{ t.back }}</button></sc-if>
+<button onClick="{{ nextStep }}" style="height:48px;flex:1;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:rgb(104,0,8)">{{ nextLabel }}</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ is.created }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100%;background:#fff;padding:32px 20px 24px;display:flex;flex-direction:column;gap:20px">
+<div style="width:56px;height:56px;border-radius:50%;background:rgb(233,245,227);color:rgb(36,120,0);display:flex;align-items:center;justify-content:center"><ds-icon name="CheckCircle" size="28"></ds-icon></div>
+<div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:24px;font-weight:700">{{ t.published }}</div><div style="font-size:14px;line-height:1.55;color:rgb(102,102,102)">{{ t.publishedSub }}</div></div>
+<div style="border:1px solid rgba(0,0,0,.08);border-radius:6px;display:flex;flex-direction:column">
+<div style="padding:14px;display:flex;flex-direction:column;gap:4px;border-bottom:1px solid rgba(0,0,0,.06)"><span style="font-size:12px;color:rgb(102,102,102)">{{ t.listingId }}</span><span style="font-size:22px;font-weight:700;font-family:Menlo,monospace;color:rgb(121,0,9)">DS-SUR-{{ newL.id }}</span></div>
+<div style="padding:10px 14px;display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid rgba(0,0,0,.06)"><span style="color:rgb(102,102,102)">{{ t.property }}</span><span style="font-weight:600">{{ newL.title }} · {{ newL.loc }}</span></div>
+<div style="padding:10px 14px;display:flex;justify-content:space-between;font-size:13px;border-bottom:1px solid rgba(0,0,0,.06)"><span style="color:rgb(102,102,102)">{{ t.listedBy }}</span><span style="font-weight:600">{{ newL.agentName }} · {{ newL.agentId }}</span></div>
+<div style="padding:10px 14px;display:flex;justify-content:space-between;font-size:13px"><span style="color:rgb(102,102,102)">{{ t.createdAt }}</span><span style="font-weight:600">{{ newL.listed }}</span></div>
+</div>
+<div style="margin-top:auto;display:flex;flex-direction:column;gap:8px">
+<button onClick="{{ shareNew }}" style="height:48px;width:100%;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px" style-hover="background:rgb(104,0,8)"><ds-icon name="Whatsapp" size="18"></ds-icon>{{ t.shareWa }}</button>
+<button onClick="{{ viewNew }}" style="height:48px;width:100%;border:1px solid rgba(0,0,0,.16);border-radius:4px;background:#fff;color:rgb(61,61,61);font-size:15px;font-weight:600;cursor:pointer" style-hover="background:rgb(245,245,245)">{{ t.viewListing }}</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ is.visit }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;min-height:100%;background:#fff">
+<div style="padding:16px;display:flex;flex-direction:column;gap:18px;flex:1">
+<div style="font-size:14px;line-height:1.5;color:rgb(102,102,102)">{{ t.visitSub }}</div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ t.property }}</span>
+<div style="border:1px solid rgba(0,0,0,.12);border-radius:6px;max-height:188px;overflow-y:auto">
+<sc-for list="{{ vListings }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.pick }}" style="width:100%;display:flex;gap:12px;align-items:center;padding:10px 12px;border:none;border-bottom:1px solid rgba(0,0,0,.06);background:#fff;cursor:pointer;text-align:left;color:rgb(61,61,61)"><span style="width:20px;height:20px;border-radius:50%;border:{{ o.radio }};flex:none"></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-size:14px;font-weight:500">{{ o.label }}</span><span style="font-size:11px;font-family:Menlo,monospace;color:rgb(102,102,102)">{{ o.id }}</span></span></button></sc-for>
+</div></div>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:600">{{ t.buyerName }}</span><input value="{{ vf.buyer }}" onChange="{{ onBuyer }}" placeholder="Nirav Joshi" style="width:100%;height:48px;border:1px solid rgba(0,0,0,.16);border-radius:4px;padding:0 12px;font-size:16px;color:rgb(61,61,61);outline:none" style-focus="border-color:rgb(121,0,9);box-shadow:0 0 0 4px rgba(121,0,9,.25)"></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:600">{{ t.buyerMobile }}</span><div style="display:flex;gap:8px"><div style="height:48px;padding:0 12px;display:flex;align-items:center;border:1px solid rgba(0,0,0,.16);border-radius:4px;background:rgb(245,245,245);font-size:16px">+91</div><input type="tel" inputmode="numeric" value="{{ vf.mobile }}" onChange="{{ onMobile }}" placeholder="98765 43210" style="flex:1;min-width:0;height:48px;border:1px solid rgba(0,0,0,.16);border-radius:4px;padding:0 12px;font-size:16px;color:rgb(61,61,61);outline:none" style-focus="border-color:rgb(121,0,9);box-shadow:0 0 0 4px rgba(121,0,9,.25)"></div></label>
+<div style="display:grid;grid-template-columns:1.4fr 1fr;gap:10px">
+<label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:13px;font-weight:600">{{ t.visitDate }}</span><input type="date" value="{{ vf.date }}" onChange="{{ onDate }}" style="width:100%;height:48px;border:1px solid rgba(0,0,0,.16);border-radius:4px;padding:0 10px;font-size:15px;color:rgb(61,61,61);outline:none;background:#fff"></label>
+<label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:13px;font-weight:600">{{ t.visitTime }}</span><input type="time" value="{{ vf.time }}" onChange="{{ onTime }}" style="width:100%;height:48px;border:1px solid rgba(0,0,0,.16);border-radius:4px;padding:0 10px;font-size:15px;color:rgb(61,61,61);outline:none;background:#fff"></label>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ t.coAgent }}</span><div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ cCo }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.pick }}" style="min-height:36px;padding:6px 12px;border-radius:999px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:{{ o.w }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<button onClick="{{ toggleSms }}" style="display:flex;gap:12px;align-items:flex-start;padding:12px;border:1px solid rgba(0,0,0,.12);border-radius:6px;background:#fff;cursor:pointer;text-align:left;color:rgb(61,61,61)"><span style="width:22px;height:22px;border-radius:4px;border:2px solid {{ smsBox.bd }};background:{{ smsBox.bg }};color:#fff;display:flex;align-items:center;justify-content:center;flex:none"><ds-icon name="{{ smsBox.icon }}" size="14"></ds-icon></span><span style="display:flex;flex-direction:column;gap:3px"><span style="font-size:14px;font-weight:600">{{ t.sendSms }}</span><span style="font-size:12px;color:rgb(102,102,102);line-height:1.45">{{ t.sendSmsSub }}</span></span></button>
+<div style="display:flex;gap:8px;align-items:center;font-size:12px;background:rgb(245,245,245);padding:10px 12px;border-radius:4px"><ds-icon name="Percent" size="14"></ds-icon>{{ t.termsApply }}</div>
+<sc-if value="{{ hasErr }}"><div style="font-size:13px;color:rgb(202,20,0);display:flex;gap:6px;align-items:center"><ds-icon name="WarningCircle" size="14"></ds-icon>{{ err }}</div></sc-if>
+</div>
+<div style="position:sticky;bottom:0;background:#fff;border-top:1px solid rgba(0,0,0,.08);padding:10px 16px"><button onClick="{{ saveVisit }}" style="height:48px;width:100%;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:rgb(104,0,8)">{{ t.saveVisit }}</button></div>
+</div>
+</sc-if>
+<sc-if value="{{ is.visitDone }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100%;background:#fff;padding:32px 20px 24px;display:flex;flex-direction:column;gap:20px">
+<div style="width:56px;height:56px;border-radius:50%;background:rgb(233,245,227);color:rgb(36,120,0);display:flex;align-items:center;justify-content:center"><ds-icon name="CheckCircle" size="28"></ds-icon></div>
+<div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:24px;font-weight:700">{{ t.visitSaved }}</div><div style="font-size:14px;line-height:1.55;color:rgb(102,102,102)">{{ t.visitSavedSub }}</div></div>
+<div style="border:1px solid rgba(0,0,0,.08);border-radius:6px;display:flex;flex-direction:column;font-size:13px">
+<div style="padding:12px 14px;display:flex;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,.06)"><span style="color:rgb(102,102,102)">{{ t.recordId }}</span><span style="font-weight:700;font-family:Menlo,monospace;color:rgb(121,0,9)">IN-5532</span></div>
+<div style="padding:10px 14px;display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(0,0,0,.06)"><span style="color:rgb(102,102,102)">{{ t.property }}</span><span style="font-weight:600;text-align:right">{{ vdProp }}<br><span style="font-family:Menlo,monospace;font-weight:400;font-size:11px;color:rgb(102,102,102)">{{ vdPropId }}</span></span></div>
+<div style="padding:10px 14px;display:flex;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,.06)"><span style="color:rgb(102,102,102)">{{ t.buyer }}</span><span style="font-weight:600">{{ vdBuyer }} · {{ vdMobile }}</span></div>
+<div style="padding:10px 14px;display:flex;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,.06)"><span style="color:rgb(102,102,102)">{{ t.visitDate }}</span><span style="font-weight:600">{{ vdWhen }}</span></div>
+<div style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(0,0,0,.06)"><span style="color:rgb(102,102,102)">{{ t.buyerConf }}</span><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:rgb(255,243,205);color:rgb(122,87,0)">{{ t.waiting }}</span></div>
+<div style="padding:10px 14px;display:flex;justify-content:space-between"><span style="color:rgb(102,102,102)">{{ t.validTill }}</span><span style="font-weight:600">27 Apr 2027</span></div>
+</div>
+<div style="margin-top:auto;display:flex;flex-direction:column;gap:8px">
+<button onClick="{{ openDealFromVisit }}" style="height:48px;width:100%;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:rgb(104,0,8)">{{ t.openDeal }}</button>
+<button onClick="{{ finishVisit }}" style="height:48px;width:100%;border:1px solid rgba(0,0,0,.16);border-radius:4px;background:#fff;color:rgb(61,61,61);font-size:15px;font-weight:600;cursor:pointer" style-hover="background:rgb(245,245,245)">{{ t.done }}</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ is.deals }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px;display:flex;flex-direction:column;gap:12px">
+<div style="font-size:13px;font-weight:700;color:rgb(102,102,102);text-transform:uppercase;letter-spacing:.05em">{{ t.activeDeals }}</div>
+<sc-for list="{{ deals.active }}" as="d" hint-placeholder-count="2"><button onClick="{{ d.open }}" style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;box-shadow:0 2px 3px rgba(0,0,0,.04);padding:14px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:6px;color:rgb(61,61,61)" style-hover="border-color:rgba(0,0,0,.16)">
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:Menlo,monospace;font-size:12px;color:rgb(102,102,102)">{{ d.id }}</span><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:rgb(252,236,238);color:rgb(121,0,9)">{{ d.stage }}</span></div>
+<div style="font-size:16px;font-weight:700">{{ d.title }}</div>
+<div style="display:flex;justify-content:space-between;font-size:13px;color:rgb(102,102,102)"><span>{{ d.with }}</span><span style="font-weight:600;color:rgb(61,61,61)">{{ d.amt }}</span></div>
+</button></sc-for>
+<div style="font-size:13px;font-weight:700;color:rgb(102,102,102);text-transform:uppercase;letter-spacing:.05em;margin-top:8px">{{ t.closedDeals }}</div>
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px">
+<sc-for list="{{ deals.closed }}" as="d" hint-placeholder-count="3"><button onClick="{{ d.open }}" style="width:100%;display:flex;align-items:center;gap:10px;padding:12px 14px;border:none;border-bottom:1px solid rgba(0,0,0,.06);background:none;cursor:pointer;text-align:left;color:rgb(61,61,61)"><span style="font-family:Menlo,monospace;font-size:12px;color:rgb(102,102,102);width:52px">{{ d.id }}</span><span style="flex:1;font-size:14px;font-weight:500">{{ d.title }}</span><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:{{ d.tBg }};color:{{ d.tFg }}">{{ d.st }}</span></button></sc-for>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ is.deal }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:0">
+<div style="background:#fff;padding:14px 16px 16px;border-bottom:1px solid rgba(0,0,0,.08);display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;flex-direction:column;gap:3px"><span style="font-family:Menlo,monospace;font-size:11px;color:rgb(102,102,102)">D-1187 · DS-SUR-24817</span><span style="font-size:18px;font-weight:700">{{ t.dealRoom }} · 3 BHK · {{ L.loc }}</span><span style="font-size:13px;color:rgb(102,102,102)">{{ t.dealValue }} {{ dealVal }} · {{ t.totalComm }} 2%</span></div>
+<div style="display:flex;align-items:flex-start">
+<sc-for list="{{ stages }}" as="s" hint-placeholder-count="6"><div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;min-width:0">
+<sc-if value="{{ s.notLast }}"><span style="position:absolute;top:10px;left:calc(50% + 12px);right:calc(-50% + 12px);height:2px;background:{{ s.line }}"></span></sc-if>
+<span style="width:22px;height:22px;border-radius:50%;border:2px solid {{ s.dotBd }};background:{{ s.dotBg }};color:#fff;position:relative;z-index:1;display:flex;align-items:center;justify-content:center"><ds-icon name="{{ s.icon }}" size="12"></ds-icon><span style="width:8px;height:8px;border-radius:50%;background:{{ s.inner }};position:absolute"></span></span>
+<span style="font-size:10px;font-weight:{{ s.w }};color:{{ s.fg }};text-align:center;line-height:1.2">{{ s.label }}</span>
+</div></sc-for>
+</div>
+</div>
+<div style="padding:14px 16px;display:flex;flex-direction:column;gap:14px">
+<sc-if value="{{ tokenPending }}">
+<div style="background:#fff;border:1px solid rgb(121,0,9);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 0 0 4px rgba(121,0,9,.08)">
+<div style="display:flex;gap:8px;align-items:center;font-size:15px;font-weight:700;color:rgb(121,0,9)"><ds-icon name="BanknoteOutline" size="18"></ds-icon>{{ t.confirmTitle }}</div>
+<div style="font-size:13px;line-height:1.5">{{ t.confirmBody }}</div>
+<div style="display:flex;gap:8px"><button onClick="{{ disputeToken }}" style="height:44px;flex:1;border:1px solid rgba(0,0,0,.16);border-radius:4px;background:#fff;color:rgb(61,61,61);font-size:14px;font-weight:600;cursor:pointer" style-hover="background:rgb(245,245,245)">{{ t.dispute }}</button><button onClick="{{ confirmToken }}" style="height:44px;flex:1.4;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:14px;font-weight:600;cursor:pointer" style-hover="background:rgb(104,0,8)">{{ t.confirm }}</button></div>
+</div>
+</sc-if>
+<div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:14px;font-weight:700">{{ t.participants }}</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><sc-for list="{{ people }}" as="p" hint-placeholder-count="4"><div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:10px;display:flex;gap:8px;align-items:center;min-width:0"><span style="width:32px;height:32px;border-radius:50%;background:rgb(252,236,238);color:rgb(121,0,9);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none">{{ p.i }}</span><span style="display:flex;flex-direction:column;gap:1px;min-width:0"><span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.n }}</span><span style="font-size:11px;color:rgb(102,102,102);line-height:1.3">{{ p.role }}</span></span></div></sc-for></div>
+</div>
+<div style="display:flex;border-bottom:1px solid rgba(0,0,0,.08)"><sc-for list="{{ dealTabs }}" as="d" hint-placeholder-count="4"><button onClick="{{ d.pick }}" style="flex:1;height:44px;border:none;border-bottom:2px solid {{ d.bd }};background:none;color:{{ d.fg }};font-size:13px;font-weight:{{ d.w }};cursor:pointer;margin-bottom:-1px">{{ d.label }}</button></sc-for></div>
+<sc-if value="{{ dt.activity }}">
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ act }}" as="a" hint-placeholder-count="5"><div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.06)"><span style="width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid rgba(0,0,0,.08);color:rgb(121,0,9);display:flex;align-items:center;justify-content:center;flex:none"><ds-icon name="{{ a.icon }}" size="15"></ds-icon></span><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font-size:14px;font-weight:600;line-height:1.4">{{ a.text }}</span><span style="font-size:12px;color:rgb(102,102,102)">{{ a.by }} · {{ a.time }}</span><span style="align-self:flex-start;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:{{ a.tBg }};color:{{ a.tFg }}">{{ a.tagLabel }}</span></div></div></sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ dt.terms }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;font-size:13px">
+<div style="padding:12px 14px;display:flex;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,.06)"><span style="color:rgb(102,102,102)">{{ t.dealValue }}</span><span style="font-weight:700">{{ dealVal }}</span></div>
+<div style="padding:12px 14px;display:flex;justify-content:space-between"><span style="color:rgb(102,102,102)">{{ t.totalComm }}</span><span style="font-weight:700">2% · ₹2,20,000</span></div>
+</div>
+<div style="font-size:14px;font-weight:700">{{ t.splitTitle }}</div>
+<sc-for list="{{ split }}" as="p" hint-placeholder-count="2"><div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:12px 14px;display:flex;gap:10px;align-items:center"><span style="width:32px;height:32px;border-radius:50%;background:rgb(252,236,238);color:rgb(121,0,9);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none">{{ p.i }}</span><span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:600">{{ p.n }}</span><span style="font-size:12px;color:rgb(36,120,0);display:flex;gap:4px;align-items:center"><ds-icon name="CheckCircle" size="12"></ds-icon>{{ t.ackBy }} · {{ p.ack }}</span></span><span style="text-align:right;display:flex;flex-direction:column;gap:1px"><span style="font-size:15px;font-weight:700">{{ p.amt }}</span><span style="font-size:12px;color:rgb(102,102,102)">{{ p.pct }}</span></span></div></sc-for>
+<div style="display:flex;gap:8px;align-items:center;font-size:12px;background:rgb(229,238,253);color:rgb(0,72,190);padding:10px 12px;border-radius:4px;font-weight:600"><ds-icon name="SecurityCheckOutline" size="14"></ds-icon>{{ t.protectedUntil }}</div>
+<button onClick="{{ proposeChange }}" style="height:44px;border:1px solid rgba(0,0,0,.16);border-radius:4px;background:#fff;color:rgb(61,61,61);font-size:14px;font-weight:600;cursor:pointer" style-hover="background:rgb(245,245,245)">{{ t.proposeChange }}</button>
+</div>
+</sc-if>
+<sc-if value="{{ dt.pay }}">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font-size:14px;font-weight:700">{{ t.milestones }}</div>
+<sc-for list="{{ miles }}" as="m" hint-placeholder-count="3"><div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:14px;font-weight:600">{{ m.title }}</span><span style="font-size:15px;font-weight:700">{{ m.amt }}</span></div><div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgb(102,102,102)"><span>{{ m.due }}</span><span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:{{ m.tBg }};color:{{ m.tFg }}">{{ m.st }}</span></div></div></sc-for>
+<button onClick="{{ openPay }}" style="height:44px;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" style-hover="background:rgb(104,0,8)"><ds-icon name="Plus" size="14"></ds-icon>{{ t.recordPay }}</button>
+</div>
+</sc-if>
+<sc-if value="{{ dt.docs }}">
+<div style="display:flex;flex-direction:column;gap:8px">
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px">
+<sc-for list="{{ docs }}" as="d" hint-placeholder-count="4"><div style="display:flex;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid rgba(0,0,0,.06)"><span style="width:36px;height:36px;border-radius:4px;background:rgb(252,236,238);color:rgb(121,0,9);display:flex;align-items:center;justify-content:center;flex:none"><ds-icon name="{{ d.icon }}" size="18"></ds-icon></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:600">{{ d.n }}</span><span style="font-size:12px;color:rgb(102,102,102)">{{ d.s }}</span></span><ds-icon name="Download" size="16" style="color:rgb(102,102,102)"></ds-icon></div></sc-for>
+</div>
+<button onClick="{{ uploadDoc }}" style="height:44px;border:1px dashed rgba(0,0,0,.24);border-radius:4px;background:rgb(250,250,250);color:rgb(61,61,61);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><ds-icon name="Upload" size="16"></ds-icon>{{ t.upload }}</button>
+</div>
+</sc-if>
+<button onClick="{{ reportDeal }}" style="align-self:center;border:none;background:none;color:rgb(176,18,0);font-size:13px;font-weight:600;cursor:pointer;display:flex;gap:6px;align-items:center;padding:10px"><ds-icon name="WarningTriangle" size="14"></ds-icon>{{ t.reportIssue }}</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ is.pay }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px;display:flex;flex-direction:column;gap:14px">
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:0"><span style="font-size:11px;color:rgb(102,102,102)">{{ t.toReceive }}</span><span style="font-size:16px;font-weight:600;font-family:Roboto,Inter,sans-serif">₹2,30,000</span></div>
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:0"><span style="font-size:11px;color:rgb(102,102,102)">{{ t.toPay }}</span><span style="font-size:16px;font-weight:600;font-family:Roboto,Inter,sans-serif">₹1,10,000</span></div>
+<div style="background:rgb(252,231,229);border:1px solid rgba(176,18,0,.2);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:0"><span style="font-size:11px;color:rgb(176,18,0)">{{ t.overdue }}</span><span style="font-size:16px;font-weight:600;font-family:Roboto,Inter,sans-serif;color:rgb(176,18,0)">₹1,20,000</span></div>
+</div>
+<button onClick="{{ openPay }}" style="height:44px;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" style-hover="background:rgb(104,0,8)"><ds-icon name="Plus" size="14"></ds-icon>{{ t.recordPay }}</button>
+<div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px 2px"><sc-for list="{{ pFilters }}" as="o" hint-placeholder-count="5"><button onClick="{{ o.pick }}" style="min-height:34px;padding:6px 14px;border-radius:999px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:{{ o.w }};cursor:pointer;white-space:nowrap;flex:none">{{ o.label }}</button></sc-for></div>
+<sc-for list="{{ pays }}" as="p" hint-placeholder-count="4">
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;box-shadow:0 2px 3px rgba(0,0,0,.04);padding:12px 14px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;gap:10px;align-items:center">
+<span style="width:36px;height:36px;border-radius:50%;background:{{ p.dBg }};color:{{ p.dFg }};display:flex;align-items:center;justify-content:center;flex:none"><ds-icon name="{{ p.dIcon }}" size="16"></ds-icon></span>
+<span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:600">{{ p.dirLabel }}: {{ p.party }}</span><span style="font-size:12px;color:rgb(102,102,102)">{{ p.deal }}</span></span>
+<span style="font-size:16px;font-weight:700">{{ p.amt }}</span>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-size:12px;color:rgb(102,102,102);line-height:1.4">{{ p.when }}</span><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:{{ p.tBg }};color:{{ p.tFg }};white-space:nowrap">{{ p.st }}</span></div>
+<sc-if value="{{ p.hasRemind }}"><button onClick="{{ p.onRemind }}" style="height:40px;border:1px solid rgb(121,0,9);border-radius:4px;background:#fff;color:rgb(121,0,9);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" style-hover="background:rgb(252,236,238)"><ds-icon name="Whatsapp" size="16"></ds-icon>{{ t.remind }}</button></sc-if>
+</div>
+</sc-for>
+<sc-if value="{{ payEmpty }}"><div style="padding:24px;text-align:center;font-size:14px;color:rgb(102,102,102)">—</div></sc-if>
+<div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.5;color:rgb(102,102,102)"><ds-icon name="Information" size="14"></ds-icon><span>{{ t.ledgerNote }}</span></div>
+<button onClick="{{ downloadLedger }}" style="height:44px;border:1px solid rgba(0,0,0,.16);border-radius:4px;background:#fff;color:rgb(61,61,61);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" style-hover="background:rgb(245,245,245)"><ds-icon name="Download" size="16"></ds-icon>{{ t.download }}</button>
+</div>
+</sc-if>
+<sc-if value="{{ is.reports }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px;display:flex;flex-direction:column;gap:12px">
+<div style="font-size:13px;line-height:1.5;color:rgb(102,102,102)">{{ t.repIntro }}</div>
+<button onClick="{{ newReport }}" style="height:44px;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" style-hover="background:rgb(104,0,8)"><ds-icon name="Plus" size="14"></ds-icon>{{ t.newReport }}</button>
+<sc-for list="{{ reps }}" as="r" hint-placeholder-count="3"><div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:12px 14px;display:flex;gap:12px">
+<span style="width:36px;height:36px;border-radius:4px;background:rgb(245,245,245);color:rgb(61,61,61);display:flex;align-items:center;justify-content:center;flex:none"><ds-icon name="{{ r.icon }}" size="16"></ds-icon></span>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:14px;font-weight:600">{{ r.title }}</span><span style="font-size:11px;font-family:Menlo,monospace;color:rgb(102,102,102)">{{ r.id }}</span></div><span style="font-size:12px;color:rgb(102,102,102);line-height:1.45">{{ r.desc }}</span><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:{{ r.tBg }};color:{{ r.tFg }}">{{ r.st }}</span><span style="font-size:11px;color:rgb(102,102,102)">{{ r.date }}</span></div></div>
+</div></sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ is.reportNew }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;min-height:100%;background:#fff">
+<div style="padding:16px;display:flex;flex-direction:column;gap:18px;flex:1">
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:15px;font-weight:700">{{ t.whatHappened }}</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><sc-for list="{{ rTypes }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.pick }}" style="display:flex;flex-direction:column;gap:6px;padding:12px;border-radius:6px;border:1px solid {{ o.bd }};background:{{ o.bg }};cursor:pointer;text-align:left;color:rgb(61,61,61)"><span style="color:{{ o.ic }}"><ds-icon name="{{ o.icon }}" size="20"></ds-icon></span><span style="font-size:14px;font-weight:600">{{ o.label }}</span><span style="font-size:11px;color:rgb(102,102,102);line-height:1.35">{{ o.sub }}</span></button></sc-for></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ t.related }}</span><div style="display:flex;flex-direction:column;gap:6px"><sc-for list="{{ rRel }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="display:flex;gap:10px;align-items:center;min-height:44px;padding:8px 12px;border-radius:4px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:{{ o.w }};cursor:pointer;text-align:left"><span style="width:18px;height:18px;border-radius:50%;border:{{ o.radio }};background:#fff;flex:none"></span>{{ o.label }}</button></sc-for></div></div>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:600">{{ t.details }}</span><textarea value="{{ rtext }}" onChange="{{ onRtext }}" placeholder="{{ t.detailsPh }}" rows="3" style="width:100%;border:1px solid rgba(0,0,0,.16);border-radius:4px;padding:10px 12px;font-size:15px;line-height:1.5;color:rgb(61,61,61);outline:none;resize:vertical" style-focus="border-color:rgb(121,0,9);box-shadow:0 0 0 4px rgba(121,0,9,.25)"></textarea></label>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ t.evidence }}</span>
+<div style="background:rgb(250,250,250);border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:4px 12px"><sc-for list="{{ rEvidence }}" as="e" hint-placeholder-count="3"><div style="display:flex;gap:8px;align-items:center;padding:8px 0;font-size:13px;border-bottom:1px solid rgba(0,0,0,.05)"><ds-icon name="CheckCircle" size="14" style="color:rgb(36,120,0)"></ds-icon>{{ e }}</div></sc-for></div>
+<button onClick="{{ uploadDoc }}" style="height:44px;border:1px dashed rgba(0,0,0,.24);border-radius:4px;background:#fff;color:rgb(61,61,61);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><ds-icon name="PaperclipOutline" size="16"></ds-icon>{{ t.addFiles }}</button>
+</div>
+<div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.5;background:rgb(245,245,245);padding:10px 12px;border-radius:4px"><ds-icon name="Information" size="14"></ds-icon><span>{{ t.repIntro }}</span></div>
+</div>
+<div style="position:sticky;bottom:0;background:#fff;border-top:1px solid rgba(0,0,0,.08);padding:10px 16px"><button onClick="{{ submitReport }}" style="height:48px;width:100%;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:rgb(104,0,8)">{{ t.submit }}</button></div>
+</div>
+</sc-if>
+<sc-if value="{{ is.reportDone }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100%;background:#fff;padding:32px 20px 24px;display:flex;flex-direction:column;gap:20px">
+<div style="width:56px;height:56px;border-radius:50%;background:rgb(229,238,253);color:rgb(0,72,190);display:flex;align-items:center;justify-content:center"><ds-icon name="CheckCircle" size="28"></ds-icon></div>
+<div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:24px;font-weight:700">{{ t.repDone }}</div><div style="font-family:Menlo,monospace;font-size:14px;font-weight:700;color:rgb(121,0,9)">{{ newRepId }}</div><div style="font-size:14px;line-height:1.55;color:rgb(102,102,102)">{{ t.repDoneSub }}</div></div>
+<div style="display:flex;flex-direction:column;gap:0;border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:6px 14px">
+<div style="font-size:13px;font-weight:700;padding:8px 0">{{ t.nextSteps }}</div>
+<div style="display:flex;gap:10px;align-items:center;padding:8px 0;font-size:13px"><span style="width:22px;height:22px;border-radius:50%;background:rgb(121,0,9);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">1</span>{{ t.ns1 }}</div>
+<div style="display:flex;gap:10px;align-items:center;padding:8px 0;font-size:13px"><span style="width:22px;height:22px;border-radius:50%;border:2px solid rgba(0,0,0,.2);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">2</span>{{ t.ns2 }}</div>
+<div style="display:flex;gap:10px;align-items:center;padding:8px 0;font-size:13px"><span style="width:22px;height:22px;border-radius:50%;border:2px solid rgba(0,0,0,.2);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">3</span>{{ t.ns3 }}</div>
+<div style="display:flex;gap:10px;align-items:center;padding:8px 0;font-size:13px"><span style="width:22px;height:22px;border-radius:50%;border:2px solid rgba(0,0,0,.2);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">4</span>{{ t.ns4 }}</div>
+</div>
+<div style="margin-top:auto;display:flex;flex-direction:column;gap:8px">
+<button onClick="{{ viewReports }}" style="height:48px;width:100%;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:rgb(104,0,8)">{{ t.viewReports }}</button>
+<button onClick="{{ goHome }}" style="height:48px;width:100%;border:1px solid rgba(0,0,0,.16);border-radius:4px;background:#fff;color:rgb(61,61,61);font-size:15px;font-weight:600;cursor:pointer" style-hover="background:rgb(245,245,245)">{{ t.done }}</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ is.profile }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px;display:flex;flex-direction:column;gap:16px">
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:16px;display:flex;gap:14px;align-items:center">
+<span style="width:60px;height:60px;border-radius:50%;background:rgb(252,236,238);color:rgb(121,0,9);font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none">RP</span>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:18px;font-weight:700">{{ me }}</span><span style="font-size:13px;color:rgb(102,102,102)">{{ t.agency }}</span><span style="display:flex;gap:6px;align-items:center;font-size:12px;font-weight:600;color:rgb(36,120,0)"><ds-icon name="SecurityCheckSolid" size="14"></ds-icon>{{ t.verifiedAgent }} · <span style="font-family:Menlo,monospace;color:rgb(102,102,102);font-weight:400">DS-AG-1042</span></span></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:14px;font-weight:700">{{ t.verification }}</div>
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px"><sc-for list="{{ verif }}" as="v" hint-placeholder-count="4"><div style="display:flex;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid rgba(0,0,0,.06)"><span style="color:{{ v.tFg }}"><ds-icon name="{{ v.icon }}" size="18"></ds-icon></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:600">{{ v.label }}</span><span style="font-size:12px;color:rgb(102,102,102)">{{ v.sub }}</span></span><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:{{ v.tBg }};color:{{ v.tFg }}">{{ v.st }}</span></div></sc-for></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:14px;font-weight:700">{{ t.trust }}</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:2px"><span style="font-size:22px;font-weight:300;font-family:Roboto,Inter,sans-serif">38</span><span style="font-size:11px;color:rgb(102,102,102);line-height:1.3">{{ t.tr1 }}</span></div>
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:2px"><span style="font-size:22px;font-weight:300;font-family:Roboto,Inter,sans-serif">96%</span><span style="font-size:11px;color:rgb(102,102,102);line-height:1.3">{{ t.tr2 }}</span></div>
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:2px"><span style="font-size:22px;font-weight:300;font-family:Roboto,Inter,sans-serif">0</span><span style="font-size:11px;color:rgb(102,102,102);line-height:1.3">{{ t.tr3 }}</span></div>
+</div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:14px;font-weight:700">{{ t.language }}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><sc-for list="{{ profLang }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="height:44px;border-radius:4px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:14px;font-weight:{{ o.w }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px">
+<button onClick="{{ openReports }}" style="width:100%;display:flex;gap:12px;align-items:center;min-height:48px;padding:0 14px;border:none;border-bottom:1px solid rgba(0,0,0,.06);background:none;cursor:pointer;font-size:14px;color:rgb(61,61,61);text-align:left"><ds-icon name="WarningTriangle" size="16"></ds-icon><span style="flex:1">{{ t.repTitle }}</span><ds-icon name="ArrowChevronRight" size="16"></ds-icon></button>
+<button onClick="{{ openNotifsP }}" style="width:100%;display:flex;gap:12px;align-items:center;min-height:48px;padding:0 14px;border:none;border-bottom:1px solid rgba(0,0,0,.06);background:none;cursor:pointer;font-size:14px;color:rgb(61,61,61);text-align:left"><ds-icon name="Notification" size="16"></ds-icon><span style="flex:1">{{ t.menuNotifs }}</span><ds-icon name="ArrowChevronRight" size="16"></ds-icon></button>
+<button onClick="{{ openHistory }}" style="width:100%;display:flex;gap:12px;align-items:center;min-height:48px;padding:0 14px;border:none;border-bottom:1px solid rgba(0,0,0,.06);background:none;cursor:pointer;font-size:14px;color:rgb(61,61,61);text-align:left"><ds-icon name="FileReport" size="16"></ds-icon><span style="flex:1">{{ t.menuHistory }}</span><ds-icon name="Download" size="16"></ds-icon></button>
+<button onClick="{{ openPrivacy }}" style="width:100%;display:flex;gap:12px;align-items:center;min-height:48px;padding:0 14px;border:none;border-bottom:1px solid rgba(0,0,0,.06);background:none;cursor:pointer;font-size:14px;color:rgb(61,61,61);text-align:left"><ds-icon name="SecurityLockOutline" size="16"></ds-icon><span style="flex:1">{{ t.menuPrivacy }}</span><ds-icon name="ArrowChevronRight" size="16"></ds-icon></button>
+<button onClick="{{ logout }}" style="width:100%;display:flex;gap:12px;align-items:center;min-height:48px;padding:0 14px;border:none;background:none;cursor:pointer;font-size:14px;color:rgb(176,18,0);text-align:left"><ds-icon name="Logout" size="16"></ds-icon><span style="flex:1">{{ t.logout }}</span></button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ is.notifs }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;background:#fff;min-height:100%">
+<sc-for list="{{ notifs }}" as="n" hint-placeholder-count="5"><button onClick="{{ n.open }}" style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:none;border-bottom:1px solid rgba(0,0,0,.06);background:{{ n.bg }};cursor:pointer;text-align:left;color:rgb(61,61,61)"><span style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid rgba(0,0,0,.08);color:rgb(121,0,9);display:flex;align-items:center;justify-content:center;flex:none"><ds-icon name="{{ n.icon }}" size="16"></ds-icon></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="font-size:14px;line-height:1.45;font-weight:500">{{ n.text }}</span><span style="font-size:12px;color:rgb(102,102,102)">{{ n.time }}</span></span><sc-if value="{{ n.unread }}"><span style="width:8px;height:8px;border-radius:50%;background:rgb(121,0,9);margin-top:6px;flex:none"></span></sc-if></button></sc-for>
+</div>
+</sc-if>
+</div>
+<sc-if value="{{ showNav }}" hint-placeholder-val="{{ false }}">
+<div style="height:64px;flex:none;display:flex;border-top:1px solid rgba(0,0,0,.08);background:#fff">
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+<button onClick="{{ n.go }}" style="flex:1;min-width:0;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:{{ n.color }};font-size:11px;font-weight:{{ n.w }};position:relative">
+<ds-icon name="{{ n.icon }}" size="20"></ds-icon><span>{{ n.label }}</span>
+<sc-if value="{{ n.dot }}"><span style="position:absolute;top:10px;left:calc(50% + 7px);width:8px;height:8px;border-radius:50%;background:rgb(202,20,0);border:2px solid #fff"></span></sc-if>
+</button>
+</sc-for>
+</div>
+</sc-if>
+<div style="height:22px;flex:none;background:#fff;display:flex;align-items:center;justify-content:center"><span style="width:134px;height:5px;border-radius:3px;background:rgb(30,30,30)"></span></div>
+<sc-if value="{{ sheetShare }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(0,0,0,.4);display:flex;flex-direction:column;justify-content:flex-end;z-index:20">
+<div onClick="{{ stop }}" style="background:#fff;border-radius:12px 12px 0 0;max-height:92%;overflow-y:auto;padding:8px 16px 28px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;justify-content:center;padding:4px 0"><span style="width:40px;height:4px;border-radius:2px;background:rgba(0,0,0,.16)"></span></div>
+<div style="display:flex;align-items:center;justify-content:space-between"><div style="font-size:17px;font-weight:700">{{ t.shareTitle }}</div><button onClick="{{ closeSheet }}" aria-label="Close" style="width:36px;height:36px;border:none;background:rgb(245,245,245);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgb(61,61,61)"><ds-icon name="Close" size="16"></ds-icon></button></div>
+<div style="border:1px solid rgba(0,0,0,.16);border-radius:6px;overflow:hidden;box-shadow:0 2px 3px rgba(0,0,0,.04)">
+<div style="background:rgb(121,0,9);color:#fff;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:600"><span style="display:flex;gap:6px;align-items:center"><ds-icon name="SecurityCheckSolid" size="14"></ds-icon>{{ t.app }} · {{ t.verifiedListing }}</span><span style="font-family:Menlo,monospace;font-size:11px">DS-SUR-{{ L.id }}</span></div>
+<div style="height:128px;background:rgb(240,240,240);position:relative;display:flex;align-items:center;justify-content:center;color:rgb(150,150,150)"><ds-icon name="Images" size="28"></ds-icon><span style="position:absolute;left:10px;bottom:8px;font-size:10px;font-weight:600;color:rgb(102,102,102);background:rgba(255,255,255,.85);padding:2px 6px;border-radius:2px">DS-SUR-{{ L.id }} · {{ L.agentName }}</span></div>
+<div style="padding:12px;display:flex;flex-direction:column;gap:4px">
+<div style="font-size:18px;font-weight:700">{{ sharePrice }}</div>
+<div style="font-size:14px;font-weight:600">{{ L.title }} · {{ L.size }}</div>
+<div style="font-size:13px;color:rgb(102,102,102)">{{ shareLoc }}, {{ t.city }}</div>
+</div>
+<div style="padding:10px 12px;border-top:1px solid rgba(0,0,0,.08);display:flex;align-items:center;gap:10px;background:rgb(250,250,250)">
+<div style="width:32px;height:32px;border-radius:50%;background:rgb(252,236,238);color:rgb(121,0,9);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none">{{ L.agentInit }}</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-size:13px;font-weight:600">{{ L.agentName }} · {{ L.agentId }}</span><span style="font-size:12px;color:rgb(102,102,102)">{{ sharePhone }}</span></div>
+<span style="font-size:11px;color:rgb(121,0,9);font-weight:600">dalalsetu.in/l/{{ L.id }}</span>
+</div>
+</div>
+<div style="font-size:12px;color:rgb(102,102,102);line-height:1.5">{{ t.cardFooter }}</div>
+<div style="display:flex;flex-direction:column;border:1px solid rgba(0,0,0,.08);border-radius:6px">
+<sc-for list="{{ shareRows }}" as="r" hint-placeholder-count="3">
+<button onClick="{{ r.toggle }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:0 14px;border:none;border-bottom:1px solid rgba(0,0,0,.08);background:#fff;cursor:pointer;font-size:14px;color:rgb(61,61,61);text-align:left"><span>{{ r.label }}</span><span style="width:40px;height:22px;border-radius:999px;background:{{ r.bg }};display:flex;justify-content:{{ r.just }};padding:2px;flex:none"><span style="width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)"></span></span></button>
+</sc-for>
+</div>
+<div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.5;color:rgb(61,61,61);background:rgb(245,245,245);padding:10px 12px;border-radius:4px"><ds-icon name="Lock" size="14"></ds-icon><span>{{ t.neverShared }}</span></div>
+<div style="font-size:12px;color:rgb(102,102,102)">{{ t.shareStats }}</div>
+<div style="display:flex;gap:8px">
+<button onClick="{{ copyLink }}" style="height:48px;flex:none;padding:0 16px;border:1px solid rgba(0,0,0,.16);border-radius:4px;background:#fff;color:rgb(61,61,61);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="background:rgb(245,245,245)"><ds-icon name="LinkHorizontal" size="16"></ds-icon>{{ t.copyLink }}</button>
+<button onClick="{{ doShare }}" style="height:48px;flex:1;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px" style-hover="background:rgb(104,0,8)"><ds-icon name="Whatsapp" size="18"></ds-icon>{{ t.shareWa }}</button>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ sheetPay }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(0,0,0,.4);display:flex;flex-direction:column;justify-content:flex-end;z-index:20">
+<div onClick="{{ stop }}" style="background:#fff;border-radius:12px 12px 0 0;max-height:92%;overflow-y:auto;padding:8px 16px 28px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;justify-content:center;padding:4px 0"><span style="width:40px;height:4px;border-radius:2px;background:rgba(0,0,0,.16)"></span></div>
+<div style="display:flex;align-items:center;justify-content:space-between"><div style="font-size:17px;font-weight:700">{{ t.recordPay }}</div><button onClick="{{ closeSheet }}" aria-label="Close" style="width:36px;height:36px;border:none;background:rgb(245,245,245);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgb(61,61,61)"><ds-icon name="Close" size="16"></ds-icon></button></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><sc-for list="{{ cDir }}" as="o" hint-placeholder-count="2"><button onClick="{{ o.pick }}" style="height:44px;border-radius:4px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:14px;font-weight:{{ o.w }};cursor:pointer">{{ o.label }}</button></sc-for></div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ t.party }}</span><div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ cParty }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.pick }}" style="min-height:36px;padding:6px 12px;border-radius:999px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:{{ o.w }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ t.deal }}</span><div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ cDeal }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.pick }}" style="min-height:36px;padding:6px 12px;border-radius:999px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:{{ o.w }};cursor:pointer;font-family:Menlo,monospace">{{ o.label }}</button></sc-for></div></div>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:600">{{ t.amount }}</span><input inputmode="numeric" value="{{ pfAmount }}" onChange="{{ onAmount }}" placeholder="110000" style="width:100%;height:48px;border:1px solid rgba(0,0,0,.16);border-radius:4px;padding:0 12px;font-size:16px;color:rgb(61,61,61);background:#fff;outline:none" style-focus="border-color:rgb(121,0,9);box-shadow:0 0 0 4px rgba(121,0,9,.25)"><span style="font-size:12px;color:rgb(102,102,102)">{{ amountPreview }}</span></label>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ t.method }}</span><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px"><sc-for list="{{ cMethod }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.pick }}" style="height:40px;border-radius:4px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:{{ o.w }};cursor:pointer">{{ o.label }}</button></sc-for></div></div>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:600">{{ t.refNo }}</span><input value="{{ pfRef }}" onChange="{{ onRef }}" placeholder="4471 0938 2215" style="width:100%;height:48px;border:1px solid rgba(0,0,0,.16);border-radius:4px;padding:0 12px;font-size:16px;color:rgb(61,61,61);background:#fff;outline:none" style-focus="border-color:rgb(121,0,9);box-shadow:0 0 0 4px rgba(121,0,9,.25)"></label>
+<button onClick="{{ addReceipt }}" style="height:48px;border:1px dashed rgba(0,0,0,.24);border-radius:4px;background:rgb(250,250,250);color:rgb(61,61,61);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><ds-icon name="{{ receiptIcon }}" size="16"></ds-icon>{{ receiptLabel }}</button>
+<div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.5;background:rgb(229,238,253);color:rgb(0,72,190);padding:10px 12px;border-radius:4px"><ds-icon name="Information" size="14"></ds-icon><span>{{ t.payNote }}</span></div>
+<sc-if value="{{ hasErr }}"><div style="font-size:13px;color:rgb(202,20,0);display:flex;gap:6px;align-items:center"><ds-icon name="WarningCircle" size="14"></ds-icon>{{ err }}</div></sc-if>
+<button onClick="{{ savePay }}" style="height:48px;width:100%;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:rgb(104,0,8)">{{ t.savePay }}</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:16px;right:16px;bottom:100px;z-index:30;display:flex;justify-content:center;pointer-events:none"><div style="background:rgb(61,61,61);color:#fff;font-size:13px;line-height:1.4;padding:10px 14px;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,.12),0 8px 10px rgba(0,0,0,.12);display:flex;gap:8px;align-items:center"><ds-icon name="CheckCircle" size="16"></ds-icon>{{ toast }}</div></div>
+</sc-if>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultLang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;gu&quot;,&quot;en&quot;],&quot;default&quot;:&quot;gu&quot;,&quot;tsType&quot;:&quot;'gu'|'en'&quot;},&quot;showNavigator&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { ready: !!window.DSD, lang: this.props.defaultLang === 'en' ? 'en' : 'gu', screen: 'lang', hist: [], sheet: null, phone: '', otp: '', err: '', lid: '24817', feedTab: 'network', filter: 'all', q: '', dealTab: 'activity', tokenOk: false, payFilter: 'all', toast: '', step: 1,
+    f: { kind: 'res', tx: 'sale', bhk: '3', loc: '', price: '', size: '', desc: '', photos: 2, amen: ['Lift', 'Parking'], collab: true, comm: '2', split: '50', phoneVis: 'approved', addrVis: 'onlyme', auth: false, mandate: false },
+    pf: { dir: 'in', method: 'upi', amount: '', ref: '', party: 'ms', deal: 'D-1187', receipt: false },
+    vf: { lid: '24817', buyer: '', mobile: '', date: '2026-10-30', time: '11:00', co: 'ms', sms: true },
+    rtype: 'copy', rrel: 0, rtext: '', share: { price: true, soc: false, phone: true }, extraPays: [], extraReps: [], newL: null, asked: {}, vDone: null };
+  componentDidMount() { if (!window.DSD) { this._p = setInterval(() => { if (window.DSD) { clearInterval(this._p); this.setState({ ready: true }); } }, 50); } }
+  componentWillUnmount() { clearInterval(this._p); clearTimeout(this._tt); }
+  componentDidUpdate() { if (this._ls !== this.state.screen) { this._ls = this.state.screen; if (this.sc) this.sc.scrollTop = 0; } }
+  pick(v) { const l = this.state.lang; const f = x => Array.isArray(x) ? x.map(f) : (x && typeof x === 'object') ? (('en' in x) && ('gu' in x) && Object.keys(x).length === 2 ? x[l] : Object.fromEntries(Object.entries(x).map(([k, y]) => [k, f(y)]))) : x; return f(v); }
+  go(screen, extra) { this.setState(s => ({ hist: [...s.hist, s.screen], screen, sheet: null, err: '', ...(extra || {}) })); }
+  tabTo(screen, extra) { this.setState({ screen, hist: [], sheet: null, err: '', ...(extra || {}) }); }
+  back() { this.setState(s => { const h = [...s.hist]; const p = h.pop() || 'home'; return { screen: p, hist: h, sheet: null, err: '' }; }); }
+  toast(m) { clearTimeout(this._tt); this.setState({ toast: m }); this._tt = setTimeout(() => this.setState({ toast: '' }), 2600); }
+  setF(k, v) { this.setState(s => ({ f: { ...s.f, [k]: v }, err: '' })); }
+  setPF(k, v) { this.setState(s => ({ pf: { ...s.pf, [k]: v }, err: '' })); }
+  setVF(k, v) { this.setState(s => ({ vf: { ...s.vf, [k]: v }, err: '' })); }
+  seg(cur, opts, set) { return opts.map(([v, label]) => { const on = Array.isArray(cur) ? cur.includes(v) : cur === v; return { label, pick: () => set(v), bg: on ? 'rgb(252,236,238)' : '#fff', fg: on ? 'rgb(121,0,9)' : 'rgb(61,61,61)', bd: on ? 'rgb(121,0,9)' : 'rgba(0,0,0,.16)', w: on ? '600' : '400', radio: on ? '6px solid rgb(121,0,9)' : '2px solid rgba(0,0,0,.24)' }; }); }
+  sw(on) { return { bg: on ? 'rgb(121,0,9)' : 'rgba(0,0,0,.2)', just: on ? 'flex-end' : 'flex-start' }; }
+  box(on) { return { bg: on ? 'rgb(121,0,9)' : '#fff', bd: on ? 'rgb(121,0,9)' : 'rgba(0,0,0,.24)', icon: on ? 'Check' : '' }; }
+  jump(id) {
+    const m = { lang: { screen: 'lang', hist: [] }, phone: { screen: 'phone', hist: ['lang'] }, home: { screen: 'home', hist: [] }, feed: { screen: 'feed', hist: [] }, detail: { screen: 'detail', lid: '24817', hist: ['feed'] }, share: { screen: 'detail', lid: '24817', hist: ['feed'], sheet: 'share' }, create: { screen: 'create', step: 1, hist: ['home'] }, visit: { screen: 'visit', hist: ['home'] }, deals: { screen: 'deals', hist: [] }, deal: { screen: 'deal', dealTab: 'activity', hist: ['deals'] }, pay: { screen: 'pay', hist: [] }, payRecord: { screen: 'pay', hist: [], sheet: 'pay' }, reports: { screen: 'reports', hist: ['profile'] }, reportNew: { screen: 'reportNew', hist: ['reports'] }, profile: { screen: 'profile', hist: [] }, notifs: { screen: 'notifs', hist: ['home'] } }[id];
+    this.setState({ sheet: null, err: '', ...m });
+  }
+  renderVals() {
+    const s = this.state; if (!s.ready) return {};
+    const D = window.DSD, g = D.g, P = x => this.pick(x), en = s.lang === 'en';
+    const t = {}; for (const k in D.T) t[k] = D.T[k][en ? 0 : 1]; t.city = en ? 'Surat' : 'સુરત';
+    const TONE = { ok: ['rgb(233,245,227)', 'rgb(36,120,0)'], warn: ['rgb(255,243,205)', 'rgb(122,87,0)'], err: ['rgb(252,231,229)', 'rgb(176,18,0)'], info: ['rgb(229,238,253)', 'rgb(0,72,190)'], neutral: ['rgb(240,240,240)', 'rgb(90,90,90)'], brand: ['rgb(252,236,238)', 'rgb(121,0,9)'] };
+    const tone = k => ({ tBg: TONE[k][0], tFg: TONE[k][1] });
+    const A = id => D.agents[id];
+    const all = [...(s.newL ? [s.newL] : []), ...D.listings];
+    const view = l => { const a = A(l.agent), st = D.st[l.st]; return P({ ...l, agentName: a.n, agentInit: a.i, agentId: a.id, agency: a.ag, agentDeals: a.deals, verified: a.v, unverified: !a.v, mine: l.agent === 'rp', notMine: l.agent !== 'rp', txLabel: D.tx[l.tx], stLabel: st.l, ...tone(st.tone), open: () => this.go('detail', { lid: l.id }) }); };
+    const screen = s.screen;
+    const is = {}; ['lang', 'phone', 'otp', 'home', 'feed', 'detail', 'create', 'created', 'visit', 'visitDone', 'deals', 'deal', 'pay', 'reports', 'reportNew', 'reportDone', 'profile', 'notifs'].forEach(k => is[k] = screen === k);
+    const tabs = ['home', 'feed', 'deals', 'pay', 'profile'];
+    const showNav = tabs.includes(screen);
+    // listings
+    let list = all.filter(l => s.feedTab === 'mine' ? l.agent === 'rp' : true);
+    if (['sale', 'rent'].includes(s.filter)) list = list.filter(l => l.tx === s.filter);
+    if (['res', 'com', 'land'].includes(s.filter)) list = list.filter(l => l.kind === s.filter);
+    const q = s.q.trim().toLowerCase();
+    if (q) list = list.filter(l => [l.id, 'ds-sur-' + l.id, l.title.en, l.title.gu, l.loc.en, l.loc.gu].some(x => x.toLowerCase().includes(q)));
+    const feed = list.map(view);
+    const Lr = all.find(l => l.id === s.lid) || all[1];
+    const L = view(Lr);
+    let hist = Lr.id === '24817' ? D.h24817.slice() : [{ time: Lr.listed, icon: 'PlusCircle', text: g('Created by ' + A(Lr.agent).n.en, A(Lr.agent).n.gu + 'એ બનાવ્યું') }];
+    if (Lr.dup) hist.unshift({ time: '26 Oct, 14:10', icon: 'WarningTriangle', text: g('Flagged: photo match with DS-SUR-24817', 'ચેતવણી: DS-SUR-24817 સાથે ફોટો મેળ') });
+    const asked = !!s.asked[Lr.id];
+    // share
+    const shareRows = [['price', t.showPrice], ['soc', t.showSociety], ['phone', t.showPhone]].map(([k, label]) => ({ label, ...this.sw(s.share[k]), toggle: () => this.setState(st => ({ share: { ...st.share, [k]: !st.share[k] } })) }));
+    // create
+    const f = s.f;
+    const fmt = n => n ? '₹' + Number(n).toLocaleString('en-IN') : '';
+    const stepBars = [1, 2, 3].map(n => ({ bg: n <= s.step ? 'rgb(121,0,9)' : 'rgba(0,0,0,.12)' }));
+    const stepLabel = (en ? `Step ${s.step} of 3 · ` : `પગલું ${s.step} / 3 · `) + [t.s1, t.s2, t.s3][s.step - 1];
+    const photoTiles = Array.from({ length: f.photos }, (_, i) => ({ n: 'DS-SUR-24851 · ' + (i + 1) }));
+    const nextStep = () => {
+      if (s.step === 1 && (!f.loc || !f.price)) return this.setState({ err: t.reqErr1 });
+      if (s.step < 3) return this.setState({ step: s.step + 1, err: '' });
+      if (!f.auth) return this.setState({ err: t.reqErr3 });
+      const loc = D.locs.find(x => x[0] === f.loc);
+      const titles = { res: g(f.bhk + ' BHK Flat', f.bhk + ' BHK ફ્લેટ'), com: g('Commercial space', 'કોમર્શિયલ જગ્યા'), land: g('Plot', 'પ્લોટ') };
+      const rent = f.tx !== 'sale';
+      const newL = { id: '24851', kind: f.kind, tx: f.tx, title: titles[f.kind], soc: g('Society name on request', 'સોસાયટીનું નામ વિનંતી પર'), loc: g(loc[0], loc[1]), price: g(fmt(f.price) + (rent ? '/mo' : ''), fmt(f.price) + (rent ? '/મહિને' : '')), size: g((f.size || '—') + ' sq ft', (f.size || '—') + ' ચો. ફૂટ'), extra: g('New listing', 'નવું લિસ્ટિંગ'), agent: 'rp', photos: f.photos, upd: g('Just now', 'હમણાં જ'), st: 'avail', listed: '29 Oct 2026, 09:41', comm: g(`${f.comm}% total · ${f.split}/${100 - f.split} with partner agent`, `કુલ ${f.comm}% · સાથી દલાલ સાથે ${f.split}/${100 - f.split}`), dup: false, auth: true };
+      this.setState(st => ({ newL, screen: 'created', hist: [], err: '' }));
+    };
+    // visit
+    const vf = s.vf;
+    const vListings = all.filter(l => !l.dup).map(l => ({ label: P(l.title) + ' · ' + P(l.loc), id: 'DS-SUR-' + l.id, radio: vf.lid === l.id ? '6px solid rgb(121,0,9)' : '2px solid rgba(0,0,0,.24)', pick: () => this.setVF('lid', l.id) }));
+    const saveVisit = () => {
+      if (!vf.buyer.trim() || vf.mobile.length !== 10) return this.setState({ err: t.visitErr });
+      this.setState(st => ({ vDone: { ...st.vf }, hist: [...st.hist], screen: 'visitDone', err: '' }));
+    };
+    const vd = s.vDone || vf; const vL = all.find(l => l.id === vd.lid) || all[1];
+    // deal
+    const cur = s.tokenOk ? 4 : 3;
+    const stages = D.stages.map((x, i) => ({ label: P(x), dotBg: i < cur ? 'rgb(121,0,9)' : '#fff', dotBd: i <= cur ? 'rgb(121,0,9)' : 'rgba(0,0,0,.2)', icon: i < cur ? 'Check' : '', fg: i <= cur ? 'rgb(61,61,61)' : 'rgb(130,130,130)', w: i === cur ? '700' : '500', inner: i === cur ? 'rgb(121,0,9)' : 'transparent', line: i < cur ? 'rgb(121,0,9)' : 'rgba(0,0,0,.12)', notLast: i < 5 }));
+    let act = D.activity.map(a => ({ ...a, tag: a.tag === 'TOKEN' ? (s.tokenOk ? 'confirmed' : 'reported') : a.tag }));
+    if (s.tokenOk) act.unshift({ time: '29 Oct, 09:41', icon: 'CheckCircle', text: g('Token confirmed · deal moved to Agreement', 'ટોકનની પુષ્ટિ · ડીલ કરાર તબક્કે'), by: g('Rakesh Patel', 'રાકેશ પટેલ'), tag: 'confirmed' });
+    act = act.map(a => { const tg = D.tags[a.tag]; return P({ ...a, tagLabel: tg.l, ...tone(tg.tone) }); });
+    const dealTabs = [['activity', t.tActivity], ['terms', t.tTerms], ['pay', t.tPay], ['docs', t.tDocs]].map(([k, label]) => ({ label, pick: () => this.setState({ dealTab: k }), fg: s.dealTab === k ? 'rgb(121,0,9)' : 'rgb(102,102,102)', bd: s.dealTab === k ? 'rgb(121,0,9)' : 'transparent', w: s.dealTab === k ? '600' : '500' }));
+    const dt = {}; ['activity', 'terms', 'pay', 'docs'].forEach(k => dt[k] = s.dealTab === k);
+    // payments
+    const payAll = [...s.extraPays, ...D.pays];
+    const pays = payAll.filter(p => s.payFilter === 'all' || p.cat === s.payFilter).map(p => P({ ...p, ...tone(p.tone), dIcon: p.dir === 'in' ? 'ArrowDownLeft' : 'Arrow45UpRight', dBg: p.dir === 'in' ? 'rgb(233,245,227)' : 'rgb(240,240,240)', dFg: p.dir === 'in' ? 'rgb(36,120,0)' : 'rgb(90,90,90)', dirLabel: p.dir === 'in' ? g('From', 'તરફથી') : g('To', 'ને'), hasRemind: !!p.remind, onRemind: () => this.toast(t.remindToast) }));
+    const pFilters = this.seg(s.payFilter, [['all', t.fAll], ['due', t.pDue], ['overdue', t.overdue], ['paid', t.pPaid], ['disputed', t.pDisputed]], v => this.setState({ payFilter: v }));
+    const pf = s.pf;
+    const partyOpts = [['ms', P(A('ms').n)], ['sm', en ? 'Sunil Mehta (owner)' : 'સુનીલ મહેતા (માલિક)'], ['hd', P(A('hd').n)], ['jm', P(A('jm').n)]];
+    const savePay = () => {
+      if (!pf.amount) return this.setState({ err: t.payErr });
+      const pn = partyOpts.find(x => x[0] === pf.party);
+      const ml = { cash: g('Cash', 'રોકડ'), upi: g('UPI', 'UPI'), bank: g('Bank', 'બેંક'), cheque: g('Cheque', 'ચેક') }[pf.method];
+      const np = { id: 'P-33' + (20 + s.extraPays.length), dir: pf.dir, party: g(pn[1], pn[1]), deal: g(pf.deal, pf.deal), amt: fmt(pf.amount), when: g('Today · ' + ml.en + (pf.ref ? ' · ' + pf.ref : ''), 'આજે · ' + ml.gu + (pf.ref ? ' · ' + pf.ref : '')), st: g('Reported · awaiting confirmation', 'નોંધાયેલ · પુષ્ટિની રાહ'), tone: 'warn', cat: 'due' };
+      this.setState(st => ({ extraPays: [np, ...st.extraPays], sheet: null, payFilter: 'all', pf: { ...st.pf, amount: '', ref: '', receipt: false } }));
+      this.toast(t.paySaved);
+    };
+    // reports
+    const reps = [...s.extraReps, ...D.reports].map(r => P({ ...r, ...tone(r.tone) }));
+    const rt = D.rtypes[s.rtype];
+    const rTypes = [['copy', t.rtCopy, t.rtCopySub], ['bypass', t.rtBypass, t.rtBypassSub], ['pay', t.rtPay, t.rtPaySub], ['fake', t.rtFake, t.rtFakeSub]].map(([k, label, sub]) => ({ label, sub, icon: D.rtypes[k].icon, pick: () => this.setState({ rtype: k, rrel: 0 }), bg: s.rtype === k ? 'rgb(252,236,238)' : '#fff', bd: s.rtype === k ? 'rgb(121,0,9)' : 'rgba(0,0,0,.12)', ic: s.rtype === k ? 'rgb(121,0,9)' : 'rgb(102,102,102)' }));
+    const rRel = this.seg(s.rrel, rt.rel.map((x, i) => [i, P(x)]), v => this.setState({ rrel: v }));
+    const submitReport = () => {
+      const lbl = { copy: g('Listing copied', 'લિસ્ટિંગની નકલ'), bypass: g('Client went direct', 'ગ્રાહકે સીધો સોદો કર્યો'), pay: g('Payment issue', 'ચુકવણીમાં વાંધો'), fake: g('Fake profile', 'નકલી પ્રોફાઇલ') }[s.rtype];
+      const r = { id: 'RP-' + (232 + s.extraReps.length), icon: rt.icon, title: lbl, desc: rt.rel[s.rrel], st: g('Submitted · other party notified', 'મોકલી · સામેના પક્ષને જાણ'), tone: 'info', date: '29 Oct' };
+      this.setState(st => ({ extraReps: [r, ...st.extraReps], screen: 'reportDone', hist: ['reports'], rtext: '' }));
+    };
+    // home
+    const alerts = D.alerts.filter(a => !(a.k === 'token' && s.tokenOk)).map(a => P({ ...a, ...tone(a.tone), go: () => a.k === 'copy' ? this.go('detail', { lid: '24822' }) : a.k === 'overdue' ? this.tabTo('pay', { payFilter: 'overdue' }) : this.go('deal', { dealTab: 'activity' }) }));
+    const mineCount = all.filter(l => l.agent === 'rp').length;
+    const stats = [
+      { label: t.stActive, value: String(mineCount), cap: t.stActiveCap, color: 'rgb(61,61,61)', go: () => this.tabTo('feed', { feedTab: 'mine', filter: 'all', q: '' }) },
+      { label: t.stDeals, value: '2', cap: t.stDealsCap, color: 'rgb(61,61,61)', go: () => this.tabTo('deals') },
+      { label: t.stDue, value: '₹2,30,000', cap: t.stDueCap, color: 'rgb(121,0,9)', go: () => this.tabTo('pay') },
+      { label: t.stAck, value: s.tokenOk ? '1' : '2', cap: t.stAckCap, color: 'rgb(61,61,61)', go: () => this.go('deal', { dealTab: 'activity' }) }];
+    const qa = [
+      { icon: 'PlusCircle', label: t.qaNew, go: () => this.go('create', { step: 1 }) },
+      { icon: 'MarkerPin', label: t.qaVisit, go: () => this.go('visit') },
+      { icon: 'BanknoteOutline', label: t.qaPay, go: () => this.tabTo('pay', { sheet: 'pay' }) },
+      { icon: 'WarningTriangle', label: t.qaReport, go: () => this.go('reportNew') }];
+    const nav = [['home', 'Home', t.navHome], ['feed', 'BuildingsOutline', t.navListings], ['deals', 'Transactions', t.navDeals], ['pay', 'WalletOutline', t.navPay], ['profile', 'UserOutline', t.navMe]].map(([k, icon, label]) => ({ icon, label, go: () => this.tabTo(k), color: screen === k ? 'rgb(121,0,9)' : 'rgb(102,102,102)', w: screen === k ? '600' : '500', dot: (k === 'deals' && !s.tokenOk) || k === 'pay' }));
+    const titles = { home: t.app, feed: t.navListings, deals: t.dealsTitle, pay: t.navPay, profile: t.navMe, detail: 'DS-SUR-' + L.id, create: t.newListing, created: t.newListing, visit: t.visitTitle, visitDone: t.visitTitle, deal: 'D-1187', reports: t.repTitle, reportNew: t.newReport, reportDone: t.newReport, notifs: t.notifTitle, phone: '', otp: '' };
+    const jumpKey = s.sheet === 'share' ? 'share' : s.sheet === 'pay' ? 'payRecord' : screen === 'otp' ? 'phone' : screen === 'created' ? 'create' : screen === 'visitDone' ? 'visit' : screen === 'reportDone' ? 'reportNew' : screen;
+    const jumps = [['lang', 'Language select'], ['phone', 'Mobile & OTP'], ['home', 'Dashboard'], ['feed', 'Listing feed & search'], ['detail', 'Property detail & attribution'], ['share', 'WhatsApp share card'], ['create', 'Create listing'], ['visit', 'Record buyer visit'], ['deals', 'Deals'], ['deal', 'Deal room'], ['pay', 'Payment tracker'], ['payRecord', 'Record offline payment'], ['reports', 'Reports & disputes'], ['reportNew', 'New report'], ['profile', 'Profile & verification'], ['notifs', 'Notifications']].map(([k, label], i) => ({ label, n: String(i + 1).padStart(2, '0'), go: () => this.jump(k), bg: jumpKey === k ? 'rgb(252,236,238)' : 'transparent', fg: jumpKey === k ? 'rgb(121,0,9)' : 'rgb(61,61,61)' }));
+    const otpBoxes = Array.from({ length: 6 }, (_, i) => ({ d: s.otp[i] || '', bd: i === s.otp.length ? 'rgb(121,0,9)' : 'rgba(0,0,0,.16)' }));
+    const langOpts = [['gu', 'ગુ', 'ગુજરાતી', 'Gujarati'], ['en', 'En', 'English', 'અંગ્રેજી']].map(([v, glyph, name, sub]) => ({ glyph, name, sub, pick: () => this.setState({ lang: v }), bd: s.lang === v ? 'rgb(121,0,9)' : 'rgba(0,0,0,.12)', bg: s.lang === v ? 'rgb(252,236,238)' : '#fff', radio: s.lang === v ? '6px solid rgb(121,0,9)' : '2px solid rgba(0,0,0,.24)' }));
+    const profLang = this.seg(s.lang, [['gu', 'ગુજરાતી'], ['en', 'English']], v => this.setState({ lang: v }));
+    const verif = D.verif.map(v => P({ label: t[v.k], sub: v.sub, ok: v.ok, notOk: !v.ok, st: v.ok ? t.vDone : t.vPending, ...tone(v.ok ? 'ok' : 'warn'), icon: v.ok ? 'CheckCircle' : 'Clock' }));
+    const notifs = D.notifs.map(n => P({ ...n, bg: n.unread ? 'rgb(252,236,238)' : '#fff', unread: !!n.unread, open: () => n.go === 'deal' ? this.go('deal') : n.go === 'dup' ? this.go('detail', { lid: '24822' }) : n.go === 'pay' ? this.tabTo('pay', { payFilter: 'overdue' }) : this.tabTo('feed', { feedTab: 'mine' }) }));
+    const deals = { active: D.deals.active.map(d => P({ ...d, stage: d.main ? D.stages[cur] : d.stage, open: () => d.main ? this.go('deal', { dealTab: 'activity' }) : this.toast(t.protoOnly) })), closed: D.deals.closed.map(d => P({ ...d, ...tone(d.tone), open: () => d.id === 'D-1162' ? this.tabTo('pay', { payFilter: 'overdue' }) : this.toast(t.protoOnly) })) };
+    const filters = this.seg(s.filter, [['all', t.fAll], ['sale', t.fSale], ['rent', t.fRent], ['res', t.fRes], ['com', t.fCom], ['land', t.fLand]], v => this.setState({ filter: v }));
+    const feedTabs = [['network', t.tabNetwork], ['mine', t.tabMine]].map(([k, label]) => ({ label, pick: () => this.setState({ feedTab: k }), bg: s.feedTab === k ? '#fff' : 'transparent', fg: s.feedTab === k ? 'rgb(121,0,9)' : 'rgb(102,102,102)', sh: s.feedTab === k ? '0 2px 3px rgba(0,0,0,.08)' : 'none' }));
+    return {
+      t, is, showHeader: screen !== 'lang', isSub: !showNav, showNav, showBell: showNav, hdrTitle: titles[screen], hdrPad: showNav ? '16px' : '0px', hasErr: !!s.err, err: s.err, toast: s.toast, hasToast: !!s.toast,
+      scrollRef: el => { this.sc = el; }, back: () => this.back(), stop: e => e.stopPropagation(), closeSheet: () => this.setState({ sheet: null, err: '' }),
+      guBg: en ? 'transparent' : 'rgb(121,0,9)', guFg: en ? 'rgb(102,102,102)' : '#fff', enBg: en ? 'rgb(121,0,9)' : 'transparent', enFg: en ? '#fff' : 'rgb(102,102,102)', setGu: () => this.setState({ lang: 'gu' }), setEn: () => this.setState({ lang: 'en' }), openNotifs: () => this.go('notifs'),
+      showPanel: this.props.showNavigator !== false, jumps,
+      langOpts, goPhone: () => this.go('phone'),
+      phone: s.phone, onPhone: e => this.setState({ phone: e.target.value.replace(/\D/g, '').slice(0, 10), err: '' }), sendOtp: () => s.phone.length === 10 ? this.go('otp', { otp: '' }) : this.setState({ err: t.phoneErr }), phoneFmt: s.phone.replace(/(\d{5})(\d+)/, '$1 $2'),
+      otp: s.otp, otpBoxes, onOtp: e => this.setState({ otp: e.target.value.replace(/\D/g, '').slice(0, 6), err: '' }), verifyOtp: () => { if (s.otp.length !== 6) return this.setState({ err: t.otpErr }); this.tabTo('home'); this.toast(t.welcome); },
+      stats, qa, alerts, recent: P(D.recent),
+      feedTabs, filters, q: s.q, onQ: e => this.setState({ q: e.target.value }), feed, feedCount: feed.length + ' ' + t.results, feedEmpty: feed.length === 0, newListing: () => this.go('create', { step: 1 }),
+      L, hist: P(hist), asked, canRequest: L.notMine && !asked && !L.dup, isDupe: L.dup, mineReq: L.mine, authLabel: Lr.auth ? t.authOk : t.authNone, authIcon: Lr.auth ? 'CheckCircle' : 'WarningCircle', authColor: Lr.auth ? 'rgb(36,120,0)' : 'rgb(176,18,0)',
+      requestAccess: () => { this.setState(st => ({ asked: { ...st.asked, [Lr.id]: true } })); this.toast(t.accessToast); }, seeOriginal: () => this.go('detail', { lid: '24817' }), openShare: () => this.setState({ sheet: 'share' }), recordVisitHere: () => this.go('visit', { vf: { ...s.vf, lid: Lr.dup ? '24817' : Lr.id } }),
+      sheetShare: s.sheet === 'share', sheetPay: s.sheet === 'pay', shareRows,
+      sharePrice: s.share.price ? L.price : t.priceOnReq, shareLoc: s.share.soc ? L.soc + ', ' + L.loc : L.loc, sharePhone: s.share.phone ? '+91 98250 41042' : t.viaApp,
+      doShare: () => { this.setState({ sheet: null }); this.toast(t.sharedToast); }, copyLink: () => this.toast(t.copiedToast),
+      step1: s.step === 1, step2: s.step === 2, step3: s.step === 3, notStep1: s.step > 1, stepBars, stepLabel, nextLabel: s.step === 3 ? t.publish : t.next, nextStep, prevStep: () => this.setState({ step: Math.max(1, s.step - 1), err: '' }),
+      cKind: this.seg(f.kind, [['res', t.fRes], ['com', t.fCom], ['land', t.fLand]], v => this.setF('kind', v)), cTx: this.seg(f.tx, [['sale', t.fSale], ['rent', t.fRent], ['lease', t.fLease]], v => this.setF('tx', v)), isRes: f.kind === 'res',
+      cBhk: this.seg(f.bhk, [['1', '1 BHK'], ['2', '2 BHK'], ['3', '3 BHK'], ['4', '4 BHK'], ['5', '5+ BHK']], v => this.setF('bhk', v)), cLocs: this.seg(f.loc, D.locs.map(([e, u]) => [e, en ? e : u]), v => this.setF('loc', v)),
+      fPrice: f.price, onPrice: e => this.setF('price', e.target.value.replace(/\D/g, '').slice(0, 10)), pricePreview: fmt(f.price), fSize: f.size, onSize: e => this.setF('size', e.target.value.replace(/\D/g, '').slice(0, 6)),
+      photoTiles, canAddPhoto: f.photos < 8, addPhoto: () => this.setF('photos', Math.min(8, f.photos + 1)),
+      cAmen: this.seg(f.amen, D.amen.map(([e, u]) => [e, en ? e : u]), v => this.setF('amen', f.amen.includes(v) ? f.amen.filter(x => x !== v) : [...f.amen, v])),
+      fDesc: f.desc, onDesc: e => this.setF('desc', e.target.value),
+      collabSw: this.sw(f.collab), toggleCollab: () => this.setF('collab', !f.collab), showCollab: f.collab, fComm: f.comm, onComm: e => this.setF('comm', e.target.value.replace(/[^\d.]/g, '').slice(0, 4)),
+      cSplit: this.seg(f.split, [['50', '50 / 50'], ['60', '60 / 40'], ['70', '70 / 30']], v => this.setF('split', v)),
+      cPhone: this.seg(f.phoneVis, [['onlyme', t.onlyMe], ['approved', t.approved]], v => this.setF('phoneVis', v)), cAddr: this.seg(f.addrVis, [['onlyme', t.onlyMe], ['approved', t.approved]], v => this.setF('addrVis', v)),
+      authBox: this.box(f.auth), toggleAuth: () => this.setF('auth', !f.auth), mandateLabel: f.mandate ? t.mandateAdded : t.uploadMandate, mandateIcon: f.mandate ? 'CheckCircle' : 'Upload', addMandate: () => this.setF('mandate', true),
+      newL: s.newL ? view(s.newL) : L, viewNew: () => this.go('detail', { lid: '24851' }), shareNew: () => this.go('detail', { lid: '24851', sheet: 'share' }),
+      vListings, vf, onBuyer: e => this.setVF('buyer', e.target.value), onMobile: e => this.setVF('mobile', e.target.value.replace(/\D/g, '').slice(0, 10)), onDate: e => this.setVF('date', e.target.value), onTime: e => this.setVF('time', e.target.value),
+      cCo: this.seg(vf.co, [['none', t.none], ['ms', P(A('ms').n)], ['hd', P(A('hd').n)], ['jm', P(A('jm').n)]], v => this.setVF('co', v)), smsBox: this.box(vf.sms), toggleSms: () => this.setVF('sms', !vf.sms), saveVisit,
+      vdBuyer: vd.buyer, vdMobile: '+91 ' + (vd.mobile || '').slice(0, 2) + '••• ••' + (vd.mobile || '').slice(-3), vdProp: P(vL.title) + ' · ' + P(vL.loc), vdPropId: 'DS-SUR-' + vL.id, vdWhen: vd.date.split('-').reverse().join('/') + ' · ' + vd.time,
+      openDealFromVisit: () => this.tabTo('deal', { hist: ['deals'], dealTab: 'activity' }), finishVisit: () => this.tabTo('home'),
+      stages, curStage: P(D.stages[cur]), people: P(D.people), dealTabs, dt, act, split: P(D.split), miles: P(D.miles).map(m => ({ ...m, ...tone(m.tone) })), docs: P(D.docs),
+      tokenPending: !s.tokenOk, confirmToken: () => { this.setState({ tokenOk: true }); this.toast(t.confirmedToast); }, disputeToken: () => this.go('reportNew', { rtype: 'pay', rrel: 1 }), uploadDoc: () => this.toast(en ? 'Prototype: file picker opens here' : 'પ્રોટોટાઇપ: અહીં ફાઇલ પસંદગી ખૂલશે'), reportDeal: () => this.go('reportNew', { rtype: 'bypass', rrel: 0 }), proposeChange: () => this.toast(t.changeNote),
+      deals,
+      pays, pFilters, payEmpty: pays.length === 0, openPay: () => this.setState({ sheet: 'pay', err: '' }), downloadLedger: () => this.toast(t.downloadedToast),
+      cDir: this.seg(pf.dir, [['in', t.received], ['out', t.paid]], v => this.setPF('dir', v)), cParty: this.seg(pf.party, partyOpts, v => this.setPF('party', v)), cDeal: this.seg(pf.deal, ['D-1187', 'D-1162', 'D-1140', 'D-1121'].map(x => [x, x]), v => this.setPF('deal', v)),
+      cMethod: this.seg(pf.method, [['cash', t.cash], ['upi', 'UPI'], ['bank', t.bank], ['cheque', t.cheque]], v => this.setPF('method', v)), pfAmount: pf.amount, onAmount: e => this.setPF('amount', e.target.value.replace(/\D/g, '').slice(0, 9)), amountPreview: fmt(pf.amount), pfRef: pf.ref, onRef: e => this.setPF('ref', e.target.value), receiptLabel: pf.receipt ? t.receiptAdded : t.receipt, receiptIcon: pf.receipt ? 'CheckCircle' : 'PhotoCamera', addReceipt: () => this.setPF('receipt', true), savePay,
+      reps, newReport: () => this.go('reportNew', { rtype: 'copy', rrel: 0 }), rTypes, rRel, rEvidence: P(rt.ev), rtext: s.rtext, onRtext: e => this.setState({ rtext: e.target.value }), submitReport, viewReports: () => this.tabTo('reports', { hist: ['profile'] }), newRepId: s.extraReps[0] ? s.extraReps[0].id : 'RP-232',
+      verif, profLang, openReports: () => this.go('reports'), openNotifsP: () => this.go('notifs'), openHistory: () => this.toast(t.downloadedToast), openPrivacy: () => this.toast(t.privacyToast), logout: () => this.setState({ screen: 'lang', hist: [], phone: '', otp: '' }),
+      me: P(A('rp').n), dealVal: en ? '₹1.10 Cr' : '₹1.10 કરોડ', notifs, goHome: () => this.tabTo('home')
+    };
+  }
+}
+</script>
+</body>
+</html>

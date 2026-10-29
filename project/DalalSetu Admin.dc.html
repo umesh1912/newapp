@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&family=Noto+Sans+Gujarati:wght@400;600&display=swap" rel="stylesheet">
+<style>body{margin:0;background:rgb(250,250,250)}*{box-sizing:border-box}a{color:rgb(121,0,9)}a:hover{color:rgb(104,0,8)}button,textarea{font-family:inherit}</style>
+<script type="module" src="ds-icon.js"></script>
+</helmet>
+<div style="min-height:100vh;display:flex;font-family:Inter,'Noto Sans Gujarati',sans-serif;color:rgb(61,61,61);background:rgb(250,250,250)">
+<aside style="width:240px;flex:none;background:#fff;border-right:1px solid rgba(0,0,0,.08);display:flex;flex-direction:column;position:sticky;top:0;height:100vh">
+<div style="height:72px;display:flex;align-items:center;gap:10px;padding:0 20px;border-bottom:1px solid rgba(0,0,0,.08)"><span style="width:32px;height:32px;border-radius:4px;background:rgb(121,0,9);color:#fff;display:flex;align-items:center;justify-content:center"><ds-icon name="BuildingsSolid" size="16"></ds-icon></span><span style="display:flex;flex-direction:column"><span style="font-size:16px;font-weight:700;color:rgb(121,0,9)">DalalSetu</span><span style="font-size:11px;color:rgb(102,102,102)">Admin · Surat region</span></span></div>
+<nav style="flex:1;padding:12px;display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="4"><button onClick="{{ n.go }}" style="display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border:none;border-radius:4px;background:{{ n.bg }};color:{{ n.fg }};font-size:14px;font-weight:{{ n.w }};cursor:pointer;text-align:left" style-hover="background:rgb(252,236,238)"><ds-icon name="{{ n.icon }}" size="16"></ds-icon><span style="flex:1">{{ n.label }}</span><sc-if value="{{ n.hasCount }}"><span style="min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:rgb(121,0,9);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ n.count }}</span></sc-if></button></sc-for>
+</nav>
+<a href="DalalSetu Agent App.dc.html" style="margin:12px;padding:10px 12px;border:1px solid rgba(0,0,0,.08);border-radius:4px;font-size:13px;font-weight:600;text-decoration:none;display:flex;justify-content:space-between;align-items:center">Agent app prototype<ds-icon name="ArrowRight" size="14"></ds-icon></a>
+<div style="height:48px;display:flex;align-items:center;padding:0 20px;border-top:1px solid rgba(0,0,0,.08);font-size:11px;color:rgb(102,102,102)">©2026 DalalSetu · Privacy Policy | Terms of Use</div>
+</aside>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<header style="height:72px;flex:none;background:#fff;border-bottom:1px solid rgba(0,0,0,.08);display:flex;align-items:center;gap:16px;padding:0 24px;position:sticky;top:0;z-index:5">
+<label style="flex:1;max-width:420px;display:flex;align-items:center;gap:8px;height:36px;padding:0 10px;border:1px solid rgba(0,0,0,.16);border-radius:4px;color:rgb(102,102,102);font-size:14px"><ds-icon name="Zoom" size="14"></ds-icon><span>Search agent ID, listing ID, case ID</span></label>
+<span style="margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px"><span style="width:32px;height:32px;border-radius:50%;background:rgb(252,236,238);color:rgb(121,0,9);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center">AT</span><span style="display:flex;flex-direction:column"><span style="font-weight:600">Anita Trivedi</span><span style="font-size:11px;color:rgb(102,102,102)">Moderator</span></span></span>
+</header>
+<main style="padding:24px;display:flex;flex-direction:column;gap:20px;max-width:1280px;width:100%">
+<sc-if value="{{ is.dash }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:4px"><h1 style="margin:0;font-size:24px;font-weight:700">Dashboard</h1><p style="margin:0;font-size:14px;color:rgb(102,102,102)">Review agent verifications, listing moderation and disputes for the Surat region.</p></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+<sc-for list="{{ stats }}" as="s" hint-placeholder-count="4"><button onClick="{{ s.go }}" style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;box-shadow:0 2px 3px rgba(0,0,0,.04);padding:16px;display:flex;flex-direction:column;gap:6px;text-align:left;cursor:pointer;color:rgb(61,61,61)" style-hover="border-color:rgba(0,0,0,.16)"><span style="font-size:14px;font-weight:600">{{ s.label }}</span><span style="font-size:35px;font-weight:300;font-family:Roboto,Inter,sans-serif;line-height:1.2">{{ s.value }}</span><span style="font-size:12px;color:rgb(102,102,102)">{{ s.cap }}</span></button></sc-for>
+</div>
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px">
+<div style="padding:14px 16px;font-size:15px;font-weight:700;border-bottom:1px solid rgba(0,0,0,.08)">Recent activity</div>
+<sc-for list="{{ activity }}" as="a" hint-placeholder-count="4"><div style="display:flex;gap:16px;padding:10px 16px;border-bottom:1px solid rgba(0,0,0,.06);font-size:14px"><span style="width:80px;flex:none;color:rgb(102,102,102);font-size:13px">{{ a.time }}</span><span>{{ a.text }}</span></div></sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ is.agents }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:4px"><h1 style="margin:0;font-size:24px;font-weight:700">Agent Verification</h1><p style="margin:0;font-size:14px;color:rgb(102,102,102)">Check identity and GujRERA details before an agent receives the verified badge.</p></div>
+<div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr);gap:16px;align-items:start">
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;overflow:hidden">
+<div style="display:grid;grid-template-columns:1.6fr 1fr 0.8fr 0.7fr 1fr;gap:8px;padding:10px 12px;background:rgb(250,250,250);border-bottom:1px solid rgba(0,0,0,.08);font-size:12px;font-weight:600;color:rgb(102,102,102)"><span>Agent</span><span>Area</span><span>Applied</span><span>Docs</span><span>Status</span></div>
+<sc-for list="{{ agents }}" as="a" hint-placeholder-count="5"><button onClick="{{ a.pick }}" style="width:100%;display:grid;grid-template-columns:1.6fr 1fr 0.8fr 0.7fr 1fr;gap:8px;align-items:center;padding:10px 12px;border:none;border-bottom:1px solid rgba(0,0,0,.06);background:{{ a.rowBg }};cursor:pointer;text-align:left;font-size:14px;color:rgb(61,61,61);font-family:Roboto,Inter,sans-serif" style-hover="background:rgba(121,0,9,.04)"><span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-weight:500">{{ a.name }}</span><span style="font-size:12px;color:rgb(102,102,102);font-family:Menlo,monospace">{{ a.id }}</span></span><span>{{ a.area }}</span><span>{{ a.applied }}</span><span>{{ a.docsDone }}</span><span><span style="font-size:12px;font-weight:600;padding:3px 8px;border-radius:999px;background:{{ a.tBg }};color:{{ a.tFg }}">{{ a.stLabel }}</span></span></button></sc-for>
+</div>
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;box-shadow:0 2px 3px rgba(0,0,0,.04);display:flex;flex-direction:column">
+<div style="padding:16px;display:flex;gap:12px;align-items:center;border-bottom:1px solid rgba(0,0,0,.08)"><span style="width:44px;height:44px;border-radius:50%;background:rgb(252,236,238);color:rgb(121,0,9);font-weight:700;display:flex;align-items:center;justify-content:center"><ds-icon name="UserOutline" size="18"></ds-icon></span><span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:700">{{ A.name }}</span><span style="font-size:12px;color:rgb(102,102,102)">{{ A.id }} · {{ A.mobile }} · {{ A.area }}</span></span><span style="font-size:12px;font-weight:600;padding:3px 8px;border-radius:999px;background:{{ atBg }};color:{{ atFg }}">{{ aSt }}</span></div>
+<div style="padding:8px 16px">
+<sc-for list="{{ agentDocs }}" as="d" hint-placeholder-count="4"><div style="display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(0,0,0,.06)"><span style="color:{{ d.c }}"><ds-icon name="{{ d.icon }}" size="16"></ds-icon></span><span style="flex:1;font-size:14px;font-weight:500">{{ d.label }}</span><span style="font-size:12px;color:rgb(102,102,102)">{{ d.note }}</span></div></sc-for>
+</div>
+<div style="margin:4px 16px 0;padding:10px 12px;border-radius:4px;background:rgb(245,245,245);font-size:13px;display:flex;gap:8px;align-items:center"><ds-icon name="Information" size="14"></ds-icon>Platform history: {{ A.flag }}</div>
+<div style="padding:16px;display:flex;gap:8px">
+<button onClick="{{ reject }}" style="height:36px;padding:0 14px;border:1px solid rgba(0,0,0,.16);border-radius:4px;background:#fff;color:rgb(176,18,0);font-size:14px;font-weight:500;cursor:pointer" style-hover="background:rgb(252,231,229)">Reject</button>
+<button onClick="{{ requestInfo }}" style="height:36px;padding:0 14px;border:1px solid rgba(0,0,0,.16);border-radius:4px;background:rgb(245,245,245);color:rgb(61,61,61);font-size:14px;font-weight:500;cursor:pointer" style-hover="background:rgb(235,235,235)">Request info</button>
+<button onClick="{{ approve }}" style="margin-left:auto;height:36px;padding:0 16px;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:14px;font-weight:500;cursor:pointer" style-hover="background:rgb(104,0,8)">Approve</button>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ is.listings }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:4px"><h1 style="margin:0;font-size:24px;font-weight:700">Listing Moderation</h1><p style="margin:0;font-size:14px;color:rgb(102,102,102)">Compare flagged listings against the original record. Attribution follows creation time, mandate and share logs.</p></div>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<sc-for list="{{ cases }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.pick }}" style="flex:1;min-width:220px;display:flex;flex-direction:column;gap:6px;padding:12px 14px;border:1px solid {{ c.bd }};background:{{ c.bg }};border-radius:6px;cursor:pointer;text-align:left;color:rgb(61,61,61)"><span style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:Menlo,monospace;font-size:12px;color:rgb(102,102,102)">{{ c.id }} · {{ c.opened }}</span><span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:{{ c.tBg }};color:{{ c.tFg }}">{{ c.stLabel }}</span></span><span style="font-size:14px;font-weight:600">{{ c.title }}</span><span style="font-size:12px;color:rgb(102,102,102)">Match score {{ c.score }}</span></button></sc-for>
+</div>
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;box-shadow:0 2px 3px rgba(0,0,0,.04);display:flex;flex-direction:column">
+<div style="padding:14px 16px;border-bottom:1px solid rgba(0,0,0,.08);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:700">{{ C.id }} · {{ C.title }}</span><span style="font-size:12px;color:rgb(102,102,102)">Source: {{ C.source }}</span></span><sc-if value="{{ caseDone }}"><span style="font-size:13px;font-weight:600;color:rgb(36,120,0);display:flex;gap:6px;align-items:center"><ds-icon name="CheckCircle" size="14"></ds-icon>{{ caseSt }}</span></sc-if></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;padding:16px">
+<div style="border:1px solid rgba(0,0,0,.08);border-radius:6px;overflow:hidden"><div style="padding:8px 12px;background:rgb(233,245,227);color:rgb(36,120,0);font-size:12px;font-weight:700;display:flex;gap:6px;align-items:center"><ds-icon name="SecurityCheckSolid" size="14"></ds-icon>Earliest record</div>
+<sc-for list="{{ rowsA }}" as="r" hint-placeholder-count="8"><div style="display:flex;justify-content:space-between;gap:12px;padding:8px 12px;border-bottom:1px solid rgba(0,0,0,.06);font-size:13px;background:{{ r.bg }}"><span style="color:rgb(102,102,102)">{{ r.k }}</span><span style="font-weight:600;text-align:right">{{ r.v }}</span></div></sc-for></div>
+<sc-if value="{{ hasB }}"><div style="border:1px solid rgba(0,0,0,.08);border-radius:6px;overflow:hidden"><div style="padding:8px 12px;background:rgb(252,231,229);color:rgb(176,18,0);font-size:12px;font-weight:700;display:flex;gap:6px;align-items:center"><ds-icon name="WarningTriangle" size="14"></ds-icon>Flagged listing</div>
+<sc-for list="{{ rowsB }}" as="r" hint-placeholder-count="8"><div style="display:flex;justify-content:space-between;gap:12px;padding:8px 12px;border-bottom:1px solid rgba(0,0,0,.06);font-size:13px;background:{{ r.bg }}"><span style="color:rgb(102,102,102)">{{ r.k }}</span><span style="font-weight:600;text-align:right">{{ r.v }}</span></div></sc-for></div></sc-if>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:700">Signals</span>
+<sc-for list="{{ caseSignals }}" as="g" hint-placeholder-count="4"><div style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:4px;background:{{ g.tBg }};color:{{ g.tFg }}"><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:600">{{ g.k }}</span><span style="font-size:12px;color:rgb(61,61,61)">{{ g.v }}</span></span></div></sc-for>
+</div>
+</div>
+<sc-if value="{{ caseOpen }}"><div style="padding:12px 16px 16px;border-top:1px solid rgba(0,0,0,.08);display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+<span style="font-size:12px;color:rgb(102,102,102);margin-right:auto">Both agents are notified of any decision and can appeal within 14 days.</span>
+<button onClick="{{ notDup }}" style="height:36px;padding:0 14px;border:1px solid rgba(0,0,0,.16);border-radius:4px;background:#fff;color:rgb(61,61,61);font-size:14px;font-weight:500;cursor:pointer" style-hover="background:rgb(245,245,245)">Not a duplicate</button>
+<button onClick="{{ askMandate }}" style="height:36px;padding:0 14px;border:1px solid rgba(0,0,0,.16);border-radius:4px;background:rgb(245,245,245);color:rgb(61,61,61);font-size:14px;font-weight:500;cursor:pointer" style-hover="background:rgb(235,235,235)">Ask for owner mandate</button>
+<button onClick="{{ removeCopy }}" style="height:36px;padding:0 16px;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:14px;font-weight:500;cursor:pointer" style-hover="background:rgb(104,0,8)">Remove copy &amp; warn agent</button>
+</div></sc-if>
+</div>
+</sc-if>
+<sc-if value="{{ is.disputes }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:4px"><h1 style="margin:0;font-size:24px;font-weight:700">Disputes</h1><p style="margin:0;font-size:14px;color:rgb(102,102,102)">Decide from platform records first. Statements are context, not evidence.</p></div>
+<div style="display:grid;grid-template-columns:minmax(260px,0.8fr) minmax(0,2fr);gap:16px;align-items:start">
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;overflow:hidden">
+<sc-for list="{{ disputes }}" as="d" hint-placeholder-count="3"><button onClick="{{ d.pick }}" style="width:100%;display:flex;flex-direction:column;gap:4px;padding:12px 14px;border:none;border-bottom:1px solid rgba(0,0,0,.06);background:{{ d.rowBg }};cursor:pointer;text-align:left;color:rgb(61,61,61)"><span style="display:flex;justify-content:space-between"><span style="font-family:Menlo,monospace;font-size:12px;color:rgb(102,102,102)">{{ d.id }}</span><span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:{{ d.tBg }};color:{{ d.tFg }}">{{ d.stLabel }}</span></span><span style="font-size:14px;font-weight:600">{{ d.type }} · {{ d.amount }}</span><span style="font-size:12px;color:rgb(102,102,102)">{{ d.by }} vs {{ d.against }}</span></button></sc-for>
+</div>
+<div style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:6px;box-shadow:0 2px 3px rgba(0,0,0,.04);display:flex;flex-direction:column">
+<div style="padding:14px 16px;border-bottom:1px solid rgba(0,0,0,.08);display:flex;flex-direction:column;gap:4px"><span style="font-size:16px;font-weight:700">{{ Dp.id }} · {{ Dp.type }}</span><span style="font-size:13px;color:rgb(102,102,102)">{{ Dp.deal }} · Filed {{ Dp.filed }} by {{ Dp.by }} · Response due {{ Dp.due }}</span></div>
+<div style="padding:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px">
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:700">Platform records</span>
+<sc-for list="{{ records }}" as="r" hint-placeholder-count="4"><div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.06)"><span style="width:90px;flex:none;font-size:12px;color:rgb(102,102,102)">{{ r.time }}</span><span style="display:flex;flex-direction:column;gap:4px"><span style="font-size:13px;font-weight:500;line-height:1.4">{{ r.text }}</span><span style="align-self:flex-start;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:{{ r.tBg }};color:{{ r.tFg }}">{{ r.lvl }}</span></span></div></sc-for>
+<span style="font-size:13px;font-weight:700;margin-top:8px">Statements</span>
+<div style="padding:10px 12px;border-radius:4px;background:rgb(250,250,250);border:1px solid rgba(0,0,0,.06);font-size:13px;line-height:1.5"><b>{{ Dp.by }}:</b> {{ Dp.claimA }}</div>
+<div style="padding:10px 12px;border-radius:4px;background:rgb(250,250,250);border:1px solid rgba(0,0,0,.06);font-size:13px;line-height:1.5"><b>{{ Dp.against }}:</b> {{ Dp.claimB }}</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-if value="{{ dispOpen }}">
+<span style="font-size:13px;font-weight:700">Decision</span>
+<sc-for list="{{ decisions }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.pick }}" style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid {{ o.bd }};border-radius:4px;background:#fff;cursor:pointer;text-align:left;color:rgb(61,61,61)"><span style="width:18px;height:18px;border-radius:50%;border:{{ o.radio }};flex:none;margin-top:1px"></span><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:600">{{ o.label }}</span><span style="font-size:12px;color:rgb(102,102,102)">{{ o.sub }}</span></span></button></sc-for>
+<textarea value="{{ note }}" onChange="{{ onNote }}" rows="3" placeholder="Reason shared with both parties" style="width:100%;border:1px solid rgba(0,0,0,.16);border-radius:4px;padding:8px 10px;font-size:14px;color:rgb(61,61,61);outline:none;resize:vertical" style-focus="border-color:rgb(121,0,9);box-shadow:0 0 0 4px rgba(121,0,9,.25)"></textarea>
+<button onClick="{{ issue }}" style="height:40px;border:none;border-radius:4px;background:rgb(121,0,9);color:#fff;font-size:14px;font-weight:500;cursor:pointer" style-hover="background:rgb(104,0,8)">Issue decision</button>
+</sc-if>
+<sc-if value="{{ dispDone }}"><div style="padding:14px;border-radius:6px;background:rgb(233,245,227);color:rgb(36,120,0);display:flex;flex-direction:column;gap:4px"><span style="font-size:14px;font-weight:700;display:flex;gap:6px;align-items:center"><ds-icon name="CheckCircle" size="16"></ds-icon>{{ dispResult }}</span><span style="font-size:13px;color:rgb(61,61,61)">Both parties notified. Appeal window closes in 14 days.</span></div></sc-if>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+</main>
+</div>
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}"><div style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:30;background:rgb(61,61,61);color:#fff;font-size:13px;padding:10px 16px;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,.12),0 8px 10px rgba(0,0,0,.12);display:flex;gap:8px;align-items:center"><ds-icon name="CheckCircle" size="16"></ds-icon>{{ toast }}</div></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startPage&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dash&quot;,&quot;agents&quot;,&quot;listings&quot;,&quot;disputes&quot;],&quot;default&quot;:&quot;dash&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { page: this.props.startPage || 'dash', agentSel: 0, agentSt: {}, caseSel: 0, caseSt: {}, dispSel: 0, dispSt: {}, decision: 'uphold', note: '', toast: '' };
+  toast(m) { clearTimeout(this._t); this.setState({ toast: m }); this._t = setTimeout(() => this.setState({ toast: '' }), 2600); }
+  componentWillUnmount() { clearTimeout(this._t); }
+  static TONE = { ok: ['rgb(233,245,227)', 'rgb(36,120,0)'], warn: ['rgb(255,243,205)', 'rgb(122,87,0)'], err: ['rgb(252,231,229)', 'rgb(176,18,0)'], info: ['rgb(229,238,253)', 'rgb(0,72,190)'], neutral: ['rgb(240,240,240)', 'rgb(90,90,90)'] };
+  static AGENTS = [
+    { name: 'Kalpesh Rana', id: 'DS-AG-2290', mobile: '+91 99••• ••318', area: 'Vesu', applied: '16 Oct', docs: [['Mobile OTP', 'ok'], ['Aadhaar', 'ok'], ['GujRERA registration', 'err', 'Not provided'], ['Office address', 'err', 'Not provided']], flag: '1 open copy case (MD-77)', flagTone: 'err' },
+    { name: 'Bhavna Kapadia', id: 'DS-AG-2301', mobile: '+91 97••• ••045', area: 'Adajan', applied: '27 Oct', docs: [['Mobile OTP', 'ok'], ['Aadhaar', 'ok'], ['GujRERA registration', 'ok', 'Matched with registry'], ['Office address', 'ok']], flag: 'No flags', flagTone: 'ok' },
+    { name: 'Dhaval Thakkar', id: 'DS-AG-2304', mobile: '+91 98••• ••772', area: 'Varachha', applied: '28 Oct', docs: [['Mobile OTP', 'ok'], ['Aadhaar', 'ok'], ['GujRERA registration', 'ok', 'Matched with registry'], ['Office address', 'warn', 'Photo unclear']], flag: 'No flags', flagTone: 'ok' },
+    { name: 'Imran Shaikh', id: 'DS-AG-2307', mobile: '+91 90••• ••160', area: 'Rander', applied: '28 Oct', docs: [['Mobile OTP', 'ok'], ['Aadhaar', 'ok'], ['GujRERA registration', 'warn', 'Name differs: "Imran A. Shaikh"'], ['Office address', 'ok']], flag: 'No flags', flagTone: 'ok' },
+    { name: 'Pooja Mistry', id: 'DS-AG-2310', mobile: '+91 99••• ••903', area: 'Citylight', applied: '29 Oct', docs: [['Mobile OTP', 'ok'], ['Aadhaar', 'warn', 'Under check'], ['GujRERA registration', 'err', 'Not provided'], ['Office address', 'err', 'Not provided']], flag: 'No flags', flagTone: 'ok' }];
+  static CASES = [
+    { id: 'MD-77', title: 'Possible copy · 3 BHK, Vesu', score: '91%', opened: '26 Oct', source: 'Auto-detected + report RP-221',
+      a: { id: 'DS-SUR-24817', agent: 'Rakesh Patel · DS-AG-1042', verified: true, created: '12 Oct 2026, 10:42', price: '₹1.15 Cr', society: 'Sanskruti Heights', floor: '8th · East', photos: '7', mandate: 'Uploaded 12 Oct' },
+      b: { id: 'DS-SUR-24822', agent: 'Kalpesh Rana · DS-AG-2290', verified: false, created: '16 Oct 2026, 21:15', price: '₹1.09 Cr', society: 'Sanskruti Heights', floor: '8th · East', photos: '7', mandate: 'None' },
+      signals: [['Photo match', '5 of 7 images identical after cropping', 'err'], ['Same society, floor and facing', 'Exact match', 'err'], ['Description text', '82% similar', 'warn'], ['Shared card trail', 'Kalpesh Rana opened the 24817 card twice on 15 Oct', 'err'], ['Price', 'Differs by ₹6 L', 'neutral']] },
+    { id: 'MD-78', title: 'Two agents · 2 BHK, Pal', score: '64%', opened: '27 Oct', source: 'Auto-detected',
+      a: { id: 'DS-SUR-24790', agent: 'Mehul Shah · DS-AG-1107', verified: true, created: '3 Oct 2026, 12:10', price: '₹62 L', society: 'Riverview Residency', floor: '5th · Garden', photos: '9', mandate: 'Uploaded 3 Oct' },
+      b: { id: 'DS-SUR-24811', agent: 'Hiral Desai · DS-AG-1188', verified: true, created: '11 Oct 2026, 09:30', price: '₹62 L', society: 'Riverview Residency', floor: '5th · Garden', photos: '6', mandate: 'Uploaded 11 Oct' },
+      signals: [['Photo match', '0 of 6 images shared', 'ok'], ['Same society, floor and facing', 'Exact match', 'warn'], ['Owner mandates', 'Both agents hold a mandate from the owner', 'ok'], ['Price', 'Same', 'neutral']] },
+    { id: 'MD-79', title: 'Stale listing · Shop, Ring Road', score: '—', opened: '28 Oct', source: 'Freshness rule: no update in 45 days',
+      a: { id: 'DS-SUR-24412', agent: 'Jignesh Modi · DS-AG-1015', verified: true, created: '9 Aug 2026, 14:00', price: '₹70,000/mo', society: 'Millennium Textile Market', floor: 'Ground', photos: '4', mandate: 'Uploaded 9 Aug' },
+      b: null, signals: [['Last update', '81 days ago', 'warn'], ['Link opens last 30 days', '0', 'warn']] }];
+  static DISPUTES = [
+    { id: 'RP-208', type: 'Payment issue', amount: '₹40,000', deal: 'D-1121 · Dumas Road plot', filed: '21 Oct', due: '2 Nov', by: 'Rakesh Patel', against: 'Jignesh Modi',
+      records: [['2 Sep, 16:20', 'Commission terms 1% · 50/50 acknowledged by both', 'Both acknowledged', 'ok'], ['14 Sep', 'Sale registered · deal closed', 'Both acknowledged', 'ok'], ['9 Oct, 19:02', 'Jignesh Modi recorded ₹40,000 paid in cash', 'One-sided · no receipt', 'warn'], ['10 Oct', 'Rakesh Patel did not confirm; reminder sent', 'System', 'neutral'], ['21 Oct', 'Report RP-208 filed by Rakesh Patel', 'System', 'neutral']],
+      claimA: 'No cash was received. I asked for UPI and he agreed on the phone.', claimB: 'Paid in cash at his Vesu office on 9 Oct. His staff was present.' },
+    { id: 'RP-215', type: 'Client went direct', amount: '₹42,500', deal: 'IN-5402 · Ring Road shop', filed: '24 Oct', due: '31 Oct', by: 'Hiral Desai', against: 'Owner: Ketan Bhatt',
+      records: [['3 Sep, 11:10', 'Tenant Sameer Khan introduced to listing DS-SUR-24755', 'Tenant OTP-verified', 'ok'], ['5 Sep & 9 Sep', 'Two site visits', 'Tenant OTP-verified', 'ok'], ['22 Oct', 'Listing marked Rented by owner, not by agent', 'One-sided', 'warn'], ['24 Oct', 'Report RP-215 filed by Hiral Desai', 'System', 'neutral']],
+      claimA: 'Owner rented to my client directly within the 180-day protection window.', claimB: 'No response yet.' },
+    { id: 'RP-221', type: 'Listing copied', amount: '—', deal: 'MD-77 · DS-SUR-24822', filed: '26 Oct', due: '2 Nov', by: 'Rakesh Patel', against: 'Kalpesh Rana',
+      records: [['12 Oct, 10:42', 'DS-SUR-24817 created with mandate', 'Verified', 'ok'], ['15 Oct', 'Kalpesh Rana opened the share card twice', 'System log', 'ok'], ['16 Oct, 21:15', 'DS-SUR-24822 created, no mandate', 'One-sided', 'warn']],
+      claimA: 'He copied my photos from a WhatsApp group and lowered the price.', claimB: 'The owner is my relative and gave me the photos.' }];
+  renderVals() {
+    const s = this.state, T = Component.TONE, tone = k => ({ tBg: T[k][0], tFg: T[k][1] });
+    const page = s.page;
+    const agSt = i => s.agentSt[i] || 'pending';
+    const pendingAgents = Component.AGENTS.filter((_, i) => agSt(i) === 'pending').length;
+    const openCases = Component.CASES.filter((_, i) => !s.caseSt[i]).length;
+    const openDisp = Component.DISPUTES.filter((_, i) => !s.dispSt[i]).length;
+    const nav = [['dash', 'DashboardOutline', 'Dashboard', 0], ['agents', 'UsersOutline', 'Agent Verification', pendingAgents], ['listings', 'BuildingsOutline', 'Listing Moderation', openCases], ['disputes', 'WarningTriangle', 'Disputes', openDisp]].map(([k, icon, label, count]) => ({ icon, label, count: String(count), hasCount: count > 0, go: () => this.setState({ page: k }), bg: page === k ? 'rgb(252,236,238)' : 'transparent', fg: page === k ? 'rgb(121,0,9)' : 'rgb(61,61,61)', w: page === k ? '600' : '500' }));
+    const stMap = { pending: ['Pending', 'warn'], approved: ['Approved', 'ok'], rejected: ['Rejected', 'err'], info: ['Info requested', 'info'] };
+    const agents = Component.AGENTS.map((a, i) => { const st = stMap[agSt(i)]; const sel = s.agentSel === i; return { ...a, docsDone: a.docs.filter(d => d[1] === 'ok').length + '/4', stLabel: st[0], ...tone(st[1]), fTone: T[a.flagTone][1], rowBg: sel ? 'rgba(121,0,9,.08)' : '#fff', pick: () => this.setState({ agentSel: i }) }; });
+    const A = Component.AGENTS[s.agentSel];
+    const agentDocs = A.docs.map(d => ({ label: d[0], note: d[2] || 'Verified', icon: d[1] === 'ok' ? 'CheckCircle' : d[1] === 'warn' ? 'WarningCircle' : 'CloseCircle', c: T[d[1]][1] }));
+    const setAgent = (st, msg) => { this.setState(x => ({ agentSt: { ...x.agentSt, [x.agentSel]: st } })); this.toast(msg); };
+    const cases = Component.CASES.map((c, i) => ({ id: c.id, title: c.title, score: c.score, opened: c.opened, stLabel: s.caseSt[i] || 'Open', ...tone(s.caseSt[i] ? 'ok' : 'warn'), bd: s.caseSel === i ? 'rgb(121,0,9)' : 'rgba(0,0,0,.08)', bg: s.caseSel === i ? 'rgb(252,236,238)' : '#fff', pick: () => this.setState({ caseSel: i }) }));
+    const C = Component.CASES[s.caseSel];
+    const rowsOf = (x, other) => x ? [['Listing ID', x.id], ['Agent', x.agent], ['Created', x.created], ['Price', x.price], ['Society', x.society], ['Floor', x.floor], ['Photos', x.photos], ['Owner mandate', x.mandate]].map(([k, v], i) => ({ k, v, bg: other && Object.values(other)[i] !== undefined && [x.id, x.agent, x.created, x.price, x.society, x.floor, x.photos, x.mandate][i] === [other.id, other.agent, other.created, other.price, other.society, other.floor, other.photos, other.mandate][i] && i >= 4 && i <= 6 ? 'rgb(255,243,205)' : 'transparent' })) : [];
+    const caseSignals = C.signals.map(([k, v, tn]) => ({ k, v, ...tone(tn) }));
+    const setCase = msg => { this.setState(x => ({ caseSt: { ...x.caseSt, [x.caseSel]: msg } })); this.toast(C.id + ': ' + msg); };
+    const disputes = Component.DISPUTES.map((d, i) => ({ ...d, stLabel: s.dispSt[i] || 'Due ' + d.due, ...tone(s.dispSt[i] ? 'ok' : 'warn'), rowBg: s.dispSel === i ? 'rgba(121,0,9,.08)' : '#fff', pick: () => this.setState({ dispSel: i, decision: 'uphold', note: '' }) }));
+    const Dp = Component.DISPUTES[s.dispSel];
+    const records = Dp.records.map(([time, text, lvl, tn]) => ({ time, text, lvl, ...tone(tn) }));
+    const decisions = [['uphold', 'Uphold report', 'Record finding on the other party; payment marked owed'], ['partial', 'Partially uphold', 'Split responsibility; both notified'], ['reject', 'Not upheld', 'Records do not support the report'], ['more', 'Request more evidence', 'Extend by 7 days']].map(([k, label, sub]) => ({ label, sub, pick: () => this.setState({ decision: k }), radio: s.decision === k ? '6px solid rgb(121,0,9)' : '2px solid rgba(0,0,0,.24)', bd: s.decision === k ? 'rgb(121,0,9)' : 'rgba(0,0,0,.12)' }));
+    const dLabel = { uphold: 'Upheld', partial: 'Partially upheld', reject: 'Not upheld', more: 'More evidence requested' };
+    const dispDone = !!s.dispSt[s.dispSel];
+    const stats = [['Pending verifications', String(pendingAgents), 'Oldest from 16 Oct', 'agents'], ['Open moderation cases', String(openCases), '1 high-confidence copy', 'listings'], ['Open disputes', String(openDisp), '2 due this week', 'disputes'], ['Verified agents', '1,284', 'Across Surat', null]].map(([label, value, cap, k]) => ({ label, value, cap, go: () => k && this.setState({ page: k }) }));
+    const activity = [['09:12', 'MD-77 auto-flagged from photo match on DS-SUR-24822'], ['Yesterday', 'Bhavna Kapadia submitted GujRERA registration'], ['Yesterday', 'RP-215 filed by Hiral Desai · owner notified'], ['27 Oct', '14 agents verified this week']].map(([time, text]) => ({ time, text }));
+    return {
+      nav, is: { dash: page === 'dash', agents: page === 'agents', listings: page === 'listings', disputes: page === 'disputes' }, toast: s.toast, hasToast: !!s.toast,
+      stats, activity, agents, A, agentDocs, aSt: stMap[agSt(s.agentSel)][0], ...Object.fromEntries(Object.entries(tone(stMap[agSt(s.agentSel)][1])).map(([k, v]) => ['a' + k, v])),
+      approve: () => setAgent('approved', A.name + ' approved · badge now visible'), requestInfo: () => setAgent('info', 'Info request sent to ' + A.name + ' by SMS'), reject: () => setAgent('rejected', A.name + ' rejected · reason sent'),
+      cases, C, hasB: !!C.b, rowsA: rowsOf(C.a, C.b), rowsB: rowsOf(C.b, C.a), caseSignals, caseDone: !!s.caseSt[s.caseSel], caseOpen: !s.caseSt[s.caseSel], caseSt: s.caseSt[s.caseSel] || '',
+      removeCopy: () => setCase('Copy removed · agent warned'), askMandate: () => setCase('Mandate requested · 7 days'), notDup: () => setCase('Marked not a duplicate'),
+      disputes, Dp, records, decisions, note: s.note, onNote: e => this.setState({ note: e.target.value }), dispDone, dispOpen: !dispDone, dispResult: s.dispSt[s.dispSel] || '',
+      issue: () => { this.setState(x => ({ dispSt: { ...x.dispSt, [x.dispSel]: dLabel[x.decision] } })); this.toast(Dp.id + ' decision sent to both parties · 14-day appeal window'); }
+    };
+  }
+}
+</script>
+</body>
+</html>
